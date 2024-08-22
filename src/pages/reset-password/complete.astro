@@ -1,0 +1,194 @@
+---
+import Jumbotron from "../../components/Jumbotron.astro";
+import FormLayout from "../../layouts/FormLayout.astro";
+import Layout from "../../layouts/Layout.astro";
+import { API_URL } from "../../services/ecommerce";
+
+const reset_password_token = Astro.url.searchParams.get('token') || null;
+console.log(reset_password_token)
+
+interface AlertMessage {
+    status: string | null
+    message: string | null
+}
+
+let alertMessage:AlertMessage = {
+    status: null,
+    message: null,
+};
+
+const errors = { invalidEmail: false, invalidPassword: false };
+
+let password:any = '';
+let passwordRepeat:any = '';
+
+const isLoggedIn = Astro.cookies.has('identity');
+
+if (isLoggedIn) return Astro.redirect('/');
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.formData();
+    password = formData.get("password");
+    passwordRepeat = formData.get("password-repeat");
+
+    if(password.length < 8 || password.length > 30) {
+      errors.invalidPassword = true;
+      alertMessage.status = 'error';
+      alertMessage.message = 'La contraseña debe tener entre 8 y 30 caracteres';
+
+    } else if(password !== passwordRepeat) {
+      errors.invalidPassword = true;
+      alertMessage.status = 'error';
+      alertMessage.message = 'Las contraseñas no coinciden';
+
+    } else {
+      const resetPasswordResponse = await resetPassword(password);
+
+      console.log(resetPasswordResponse)
+
+      if(resetPasswordResponse.ok){   
+        const { user, token } = resetPasswordResponse;     
+        alertMessage.status = 'success';
+        alertMessage.message = 'Contraseña restablecida correctamente';
+
+
+        const identity = {
+            ...user,
+            token
+        }
+
+        Astro.cookies.set("identity", JSON.stringify(identity), {path: '/'})
+     
+          
+      }else {
+        const error = resetPasswordResponse.error;    
+        errors.invalidEmail = true;
+        alertMessage.status = 'error';
+
+        if(error === 'Token missing or invalid') {
+            alertMessage.message = 'Tu enlace de cambio de contraseña no es válido o ya se ha utilizado.';
+        }
+        
+        
+      }
+
+    }
+
+    const hasErrors = Object.values(errors).some(msg => msg)
+
+    if (!hasErrors) {
+      
+        if (!hasErrors) {      
+            return Astro.redirect('/');
+        }
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+
+async function loginUser(email:string, password:string){
+  try {
+    const res = await fetch(`${API_URL}/users/login`,
+      {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              email,
+              password
+          })
+      }
+    );
+
+    const data = (await res.json()) as any;
+
+    return data;
+
+  } catch(error){
+      alertMessage.status = 'error';
+      alertMessage.message = 'Ha habído un problema al iniciar sesión.';
+  }
+    
+}
+
+async function resetPassword(password:string){
+  try {
+    const res = await fetch(
+        `${API_URL}/users/reset-password`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + reset_password_token,
+            },
+            body: JSON.stringify({
+                password
+            })
+        }
+    );
+
+    const data = (await res.json()) as any;
+
+    return data;
+
+  } catch(error){
+    console.log(error)
+      alertMessage.status = 'error';
+      alertMessage.message = 'Ha habído un problema al restablecer la contraseña.';
+  }
+    
+}
+---
+
+<Layout title="Finalizar compra">
+  <main>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Restablecer contraseña"
+      color="color-dark"
+      desc="Escribe tu nueva contraseña para terminar el proceso."
+    />
+
+    <div class="container flex-dir-column">
+        <FormLayout>
+
+          <form method="POST" class="form login-form">
+            {alertMessage.message && 
+                <p class={"form-alert " + alertMessage.status}>
+                    {alertMessage?.message}
+                </p>
+            }
+            
+            <div class="form-element">
+                <label class={errors.invalidPassword ? 'invalid' : ''}>
+                    <span>Contraseña</span>
+                    <input value={password} name="password" required type="password" placeholder="Escribe tu nueva contraseña">
+                </label>
+            </div>
+
+            <div class="form-element">
+              <label class={errors.invalidPassword ? 'invalid' : ''}>
+                  <span>Repetir contraseña</span>
+                  <input value={passwordRepeat} name="password-repeat" required type="password" placeholder="Vuelve a escribir tu nueva contraseña">
+              </label>
+            </div>
+        
+            <footer>
+              <button type="submit">
+                  Cambiar contraseña
+              </button>
+              <div class="flex flex-col gap-2 mt-4">
+                  <p class="mt-2 text[#626262]">¿Ya tienes tu cuenta?</p>
+                  <a href="/login"> Inicia sesión con tu cuenta de El mundo del saquito</a>
+              </div>
+            </footer>
+          </form>
+        </FormLayout>
+    </div>
+  </main>
+</Layout>

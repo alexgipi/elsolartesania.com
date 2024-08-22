@@ -1,0 +1,78 @@
+---
+import OrderSummary from "../../components/OrderSummary.svelte";
+import Form from "../components/Form.svelte";
+import Jumbotron from "../../components/Jumbotron.astro";
+import FormLayout from "../../layouts/FormLayout.astro";
+import Layout from "../../layouts/Layout.astro";
+import SecondaryNav from "../../components/SecondaryNav.astro";
+import Modal from "../../components/Modal.astro";
+
+console.log(Astro.cookies.get("Hola"));
+---
+
+<Layout title="Finalizar compra">
+  <main>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Metodos de pago"
+      color="color-dark"
+      desc="Accede para ver y guardar todos tus pedidos en un solo lugar, disfrutando de una experiencia de compra personalizada. ¡Tu conveniencia y seguridad son nuestra prioridad!"
+    />
+
+    <SecondaryNav></SecondaryNav>
+    
+    <div class="container">
+      <div class="my-account-content">
+        Ver y editar metodos de pago
+      </div>
+    </div>
+  </main>
+
+
+  <Modal id="dialog" open="Abrir modal">
+    <button slot="open" onclick={`window.dialog.showModal()`}>OPEM</button>
+    <!-- <main slot="main">
+        <p>Some extra content you would like here</p>
+        <hr />
+        <img width="60" height="80" src="/assets/logo.svg" alt="Astro logo">
+    </main>
+    <button slot="close">Close modal</button> -->
+  </Modal>
+  
+  
+  
+</Layout>
+
+<script>
+  const modal = document.querySelector("#modal");
+  const openButton = document.querySelector("#openButton")
+
+  openButton?.addEventListener("click", (e) => {
+    modal?.classList.add("opened")
+  })
+</script>
+
+<style>
+    .container {
+      gap: 30px;
+      flex-direction: column;
+    }
+
+    .my-account-content {
+      border-radius: 4px;
+      color: #6e6e6e;
+      font-size: 0.9em;
+      width: 100%;
+    }
+
+    .modal {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .modal.opened {
+      opacity: 1;
+      visibility: visible;
+    }
+</style>
+  

@@ -1,0 +1,134 @@
+---
+// export const prerender = true;
+import Layout from "../../layouts/Layout.astro";
+import Gallery from "../../components/Gallery.svelte";
+
+import { formatCurrency } from "../../utils.ts";
+import { getProudct } from "../../services/ecommerce";
+import Purchase from "../../components/Purchase.svelte";
+import ProductOverview from "../../components/ui/ProductOverview.svelte";
+import type { on } from "events";
+
+const { product: productSlug } = Astro.params;
+const product:any = await getProudct(productSlug);
+
+
+let slider = {
+  slider_items: [{
+    title: product.name,
+    content: product.description,
+    actionButtons : [
+      {
+        text : "Ver perfumes sólidos" ,
+        link : "/perfumes-solidos" ,
+        buttonClass : "primary" ,
+      }
+    ],
+  }],
+
+}
+
+---
+
+<Layout title={product?.name}>
+    <ProductOverview client:load {product} />
+    
+    <div class="product-details-tabs-nav" style="
+    /* padding: 20px; */
+    border-bottom: 1px solid #111;
+    height: 60px;
+    background: #eee0;
+    /* padding-top: 12px; */
+">
+    <div class="container" style="
+    height: 100%;
+    /* align-items: center; */
+    /* gap: 21px; */
+">
+        <div class="product-details-tabs-nav-item" style="
+    position: relative;
+">Descripción<span style="
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 100%;
+    height: 2px;
+    background: #fff;
+"></span></div>
+        <div class="product-details-tabs-nav-item">Valoraciones</div>
+    <div class="product-details-tabs-nav-item">Compartir</div></div>
+    </div>
+
+    <div class="container flex-dir-column">
+
+      <div class="product-description-panel">
+        <h2>Descripción de {product?.name}</h2>
+
+        <div set:html={product?.description}></div>
+
+        <div class="product-meta">
+          <div class="meta-item">
+            <strong>Categoría:</strong>
+            {product?.categories?.map((category:any, index: number) => (
+              <span>{category.name} {product?.categories.length === index+1 ? '' : ','}</span>
+            ))}
+          </div>
+          <!-- <div class="meta-item">
+            <strong>Tags:</strong> Antifaz de semillas, Búhos
+          </div> -->
+        </div>
+      </div>
+      
+    </div>
+</Layout>
+
+<style>
+
+  .product-meta {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 3rem;
+  }
+
+  .product-description-panel {
+    padding: 3rem;
+    color: #483e4f;
+    border-inline: 1px solid;
+  }
+
+  .product-description-panel {
+    & h2, & h3, & h4, & h5, & h6 {
+      font-weight: 700;
+      margin-bottom: 1rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+</style>
+
+<style is:global>
+  .product-description-panel p {
+    margin-bottom: 16px;
+    text-wrap: balance;
+    margin-bottom: 1rem;
+    font-size: 0.9em;
+  }
+
+  .product-description-panel p:last-child {
+    margin-bottom: 0;
+  }
+
+  .product-details-tabs-nav-item {
+    padding: 18px 28px;
+    border-left: 1px solid;
+    border-top: 1px solid;
+
+    &:last-child {
+      border-right: 1px solid;
+    }
+  }
+</style>

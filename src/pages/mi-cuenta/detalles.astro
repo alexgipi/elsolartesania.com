@@ -1,0 +1,281 @@
+---
+import OrderSummary from "../../components/OrderSummary.svelte";
+import Form from "../components/Form.svelte";
+import Jumbotron from "../../components/Jumbotron.astro";
+import FormLayout from "../../layouts/FormLayout.astro";
+import Layout from "../../layouts/Layout.astro";
+import SecondaryNav from "../../components/SecondaryNav.astro";
+import Modal from "../../components/Modal.astro";
+
+const identityCookieValue = Astro.cookies.get("identity")?.value;
+let identity = null;
+
+try {
+  if (identityCookieValue) {
+    identity = JSON.parse(identityCookieValue);
+  }
+} catch (error) {
+  console.error("Error al analizar el valor de la cookie:", error);
+  // Puedes tomar acciones adicionales aquí, según tus necesidades.
+}
+---
+
+<Layout title="Finalizar compra">
+  <main>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Detalles de mi cuenta"
+      color="color-dark"
+      desc="Accede para ver y guardar todos tus pedidos en un solo lugar, disfrutando de una experiencia de compra personalizada. ¡Tu conveniencia y seguridad son nuestra prioridad!"
+    />
+
+    <SecondaryNav></SecondaryNav>
+    
+    <div class="container">
+
+      <div class="my-account-content">
+        <div class="my-account-panel">
+          <form>
+            <div class="space-y-12">
+              <div class="border-b border-black pb-12">
+                <h2 class="text-base uppercase font-semibold leading-7 text-gray-900">Credenciales</h2>
+                <p class="mt-1 text-sm leading-6 text-gray-600">
+                  Esta información se utilizará para iniciar sesión en tu cuenta. Por favor, asegúrate de mantenerla segura y no compartirla con nadie.
+                </p>
+
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-5">
+                  
+                  <!-- <div class="col-span-full">
+                    <label for="photo" class="block text-sm font-medium leading-6 text-gray-900">Photo</label>
+                    <div class="mt-2 flex items-center gap-x-3">
+                      <svg class="h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M18.685 19.097A9.723 9.723 0 0021.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 003.065 7.097A9.716 9.716 0 0012 21.75a9.716 9.716 0 006.685-2.653zm-12.54-1.285A7.486 7.486 0 0112 15a7.486 7.486 0 015.855 2.812A8.224 8.224 0 0112 20.25a8.224 8.224 0 01-5.855-2.438zM15.75 9a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" clip-rule="evenodd" />
+                      </svg>
+                      <button type="button" class="bg-white px-2.5 py-3 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-black hover:bg-gray-50">Change</button>
+                    </div>
+                  </div> -->
+
+                  <div class="sm:col-span-4">
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Correo electrónico</label>
+                    <div class="mt-2">
+                      <div class="flex cursor-default align-it-center ring-1 ring-inset ring-black focus-within:ring-2 focus-within:ring-inset focus-within:ring-[#000]">
+                        <input value={identity.email} readonly type="text" name="username" id="username" class="cursor-default block flex-1 border-0 bg-transparent py-3 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="janesmith">
+                        <Modal id="dialog1" title="Cambiar correo electrónico">
+                          <button slot="open" onclick=`window.dialog1.showModal()` type="button" class="mr-1 bg-transparent px-4 py-1.5 text-sm font-semibold text-gray-700  hover:text-[#6a32b5]">
+                            Editar
+                          </button>
+                        </Modal>
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="sm:col-span-4">
+                    <label for="username" class="block text-sm font-medium leading-6 text-gray-900">Nombre de usuario</label>
+                    <div class="mt-2">
+                      <div class="flex align-it-center ring-1 ring-inset ring-black focus-within:ring-2 focus-within:ring-inset focus-within:ring-[#000]">
+                        <input value={identity.username} readonly type="text" name="username" id="username" class="cursor-default block flex-1 border-0 bg-transparent py-3 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="janesmith">
+                        <Modal id="dialog2" title="Cambiar nombre de usuario">
+                          <button slot="open" onclick=`window.dialog2.showModal()` type="button" class="mr-1 bg-transparent px-4 py-1.5 text-sm font-semibold text-gray-700  hover:text-[#6a32b5]">
+                            Editar
+                          </button>
+
+                          <div slot="modal-content" class="modal-content bg-white p-4 px-6 pt-0">
+                            <div class="sm:flex">
+                  
+                              <div class="w-full mt-3 text-center sm:mt-0 sm:text-left">
+                                <div class="flex">
+                                  <div class="w-full grid gap-x-4 gap-y-4">
+                                    
+                                    <div class="sm:col-span-1">
+                                      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
+                                      <div class="mt-2">
+                                        <div class="flex cursor-default align-it-center ring-1 ring-inset ring-black focus-within:ring-2 focus-within:ring-inset focus-within:ring-[#000]">
+                                          <input value={'****************'} type="password" name="password" id="password" class="cursor-default block flex-1 border-0 bg-transparent py-3 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="janesmith">                        
+                                        </div>
+                                      </div>
+                                    </div>
+                  
+                                    <div class="sm:col-span-1">
+                                      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
+                                      <div class="mt-2">
+                                        <div class="flex cursor-default align-it-center ring-1 ring-inset ring-black focus-within:ring-2 focus-within:ring-inset focus-within:ring-[#000]">
+                                          <input value={'****************'} type="password" name="password" id="password" class="cursor-default block flex-1 border-0 bg-transparent py-3 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="janesmith">                        
+                                        </div>
+                                      </div>
+                                    </div>
+                            
+                                  </div>
+                                </div>
+                              </div>
+                  
+                            </div>
+                          </div>
+                        </Modal>
+                      </div>
+                    </div>
+                  </div>
+
+                  
+
+                  <div class="sm:col-span-4">
+                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
+                    <div class="mt-2">
+                      <div class="flex cursor-default align-it-center ring-1 ring-inset ring-black focus-within:ring-2 focus-within:ring-inset focus-within:ring-[#000]">
+                        <input value={'****************'} readonly type="password" name="password" id="password" class="cursor-default block flex-1 border-0 bg-transparent py-3 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="janesmith">
+                        <Modal id="dialog3" title="Cambiar contraseña">
+                          <button slot="open" onclick=`window.dialog3.showModal()` type="button" class="mr-1 bg-transparent px-4 py-1.5 text-sm font-semibold text-gray-700  hover:text-[#6a32b5]">
+                            Editar
+                          </button>
+
+                          <div slot="modal-content" class="modal-content bg-white p-4 px-6 pt-0">
+                            <div class="sm:flex">
+                  
+                              <div class="w-full mt-3 text-center sm:mt-0 sm:text-left">
+                                <div class="flex">
+                                  <div class="w-full grid gap-x-4 gap-y-4">
+                                    
+                                    <div class="sm:col-span-1">
+                                      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
+                                      <div class="mt-2">
+                                        <div class="flex cursor-default align-it-center ring-1 ring-inset ring-black focus-within:ring-2 focus-within:ring-inset focus-within:ring-[#000]">
+                                          <input value={'****************'} type="password" name="password" id="password" class="cursor-default block flex-1 border-0 bg-transparent py-3 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="janesmith">                        
+                                        </div>
+                                      </div>
+                                    </div>
+                  
+                                    <div class="sm:col-span-1">
+                                      <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Contraseña</label>
+                                      <div class="mt-2">
+                                        <div class="flex cursor-default align-it-center ring-1 ring-inset ring-black focus-within:ring-2 focus-within:ring-inset focus-within:ring-[#000]">
+                                          <input value={'****************'} type="password" name="password" id="password" class="cursor-default block flex-1 border-0 bg-transparent py-3 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="janesmith">                        
+                                        </div>
+                                      </div>
+                                    </div>
+                            
+                                  </div>
+                                </div>
+                              </div>
+                  
+                            </div>
+                          </div>
+                        </Modal>
+                        
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="border-b border-black pb-12">
+                <h2 class="text-base uppercase font-semibold leading-7 text-gray-900">Información personal</h2>
+                <p class="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p>
+
+                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                  <div class="sm:col-span-3">
+                    <label for="first-name" class="block text-sm font-medium leading-6 text-gray-900">Nombre y apellidos</label>
+                    <div class="mt-2">
+                      <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full border-0 py-3 text-gray-900 ring-1 ring-inset ring-black placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#000] sm:text-sm sm:leading-6">
+                    </div>
+                  </div>
+
+                  <div class="sm:col-span-3">
+                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">País</label>
+                    <div class="mt-2">
+                      <select id="country" name="country" autocomplete="country-name" class="block w-full border-0 py-3 text-gray-900 ring-1 ring-inset ring-black focus:ring-2 focus:ring-inset focus:ring-[#000] sm:max-w-xs sm:text-sm sm:leading-6">
+                        <option>España</option>
+                        <option>United States</option>
+                        <option>Canada</option>
+                        <option>Mexico</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="col-span-full">
+                    <label for="street-address" class="block text-sm font-medium leading-6 text-gray-900">Dirección</label>
+                    <div class="mt-2">
+                      <input type="text" name="street-address" id="street-address" autocomplete="street-address" class="block w-full border-0 py-3 text-gray-900 ring-1 ring-inset ring-black placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#000] sm:text-sm sm:leading-6">
+                    </div>
+                  </div>
+
+                  <div class="sm:col-span-2 sm:col-start-1">
+                    <label for="city" class="block text-sm font-medium leading-6 text-gray-900">Ciudad</label>
+                    <div class="mt-2">
+                      <input type="text" name="city" id="city" autocomplete="address-level2" class="block w-full border-0 py-3 text-gray-900 ring-1 ring-inset ring-black placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#000] sm:text-sm sm:leading-6">
+                    </div>
+                  </div>
+
+                  <div class="sm:col-span-2">
+                    <label for="region" class="block text-sm font-medium leading-6 text-gray-900">Provincia</label>
+                    <div class="mt-2">
+                      <input type="text" name="region" id="region" autocomplete="address-level1" class="block w-full border-0 py-3 text-gray-900 ring-1 ring-inset ring-black placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#000] sm:text-sm sm:leading-6">
+                    </div>
+                  </div>
+
+                  <div class="sm:col-span-2">
+                    <label for="postal-code" class="block text-sm font-medium leading-6 text-gray-900">Código postal</label>
+                    <div class="mt-2">
+                      <input type="text" name="postal-code" id="postal-code" autocomplete="postal-code" class="block w-full border-0 py-3 text-gray-900 ring-1 ring-inset ring-black placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-[#000] sm:text-sm sm:leading-6">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-6">
+              <button type="button" class="text-sm font-semibold leading-6 text-gray-900">Cancelar</button>
+              <button type="submit" class="bg-black px-3 py-3 text-sm font-semibold text-white hover:bg-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black">
+                Guardar cambios
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+    .container {
+      gap: 30px;
+      flex-direction: column;
+    }
+  
+    .my-account-content {
+      padding: 0;
+      border-radius: 4px;
+      color: #6e6e6e;
+      font-size: 0.9em;
+      width: 100%;
+      margin-bottom: 4rem;
+    }
+
+    .my-account-panel {
+      padding: 3rem;
+      outline: 1px solid;
+    }
+
+    select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    -webkit-print-color-adjust: exact;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-left: 0.75rem;
+    }
+
+    input {
+      outline: none;
+    }
+
+    select {
+      outline: none;
+    }
+</style>
+  

@@ -1,0 +1,32 @@
+---
+  let isLoggedIn = Astro.cookies.has('identity');
+---
+
+<button id="dropdownInformationButton" data-dropdown-toggle="dropdownInformation" class="my-accont-btn uppercase font-bold text-dark whitespace-nowrap bg-white hover:bg-gray-50 focus:ring-4 focus:outline-none focus:ring-gray-300 rounded-lg px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+  Mi cuenta 
+  <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+  </svg>
+</button>
+  
+<!-- Dropdown menu -->
+<slot></slot> 
+
+<script>
+  import { initDropdowns, initFlowbite } from 'flowbite';
+
+  initDropdowns();
+
+  document.addEventListener('astro:after-swap', (e) => {
+    initDropdowns();
+  })
+
+</script>
+
+<style>
+  .my-accont-btn {
+    font-size: 0.8em;
+    font-weight: bold;
+    color: #000000d9;
+  }
+</style>

@@ -1,0 +1,151 @@
+---
+import Jumbotron from "../components/Jumbotron.astro";
+import FormLayout from "../layouts/FormLayout.astro";
+import Layout from "../layouts/Layout.astro";
+import { API_URL } from "../services/ecommerce";
+
+const redirect = Astro.url.searchParams.get('redirect')! || '/';
+
+interface AlertMessage {
+    status: string | null
+    message: string | null
+}
+
+let alertMessage:AlertMessage = {
+    status: null,
+    message: null,
+};
+
+const errors = { invalidLogin: false };
+
+let email:any = '';
+let password:any = '';
+
+const isLoggedIn = Astro.cookies.has('identity');
+
+if (isLoggedIn) return Astro.redirect('/');
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.formData();
+    email = formData.get("email");
+    password = formData.get("password");
+
+    const loginUserData = await loginUser(email, password);
+
+    if(loginUserData.ok){        
+        const { user, token } = loginUserData;
+        alertMessage.status = 'success';
+        alertMessage.message = 'Sesión iniciada correctamente';
+
+        const identity = {
+            ...user,
+            token
+        }
+
+        Astro.cookies.set("identity", JSON.stringify(identity), { secure: true })
+        
+    }else {
+      errors.invalidLogin = true;
+      alertMessage.status = 'error';
+      alertMessage.message = 'Error: Usuario y/o contraseña invalidos';
+    }
+
+    const hasErrors = Object.values(errors).some(msg => msg)
+
+    if (!hasErrors) {
+      
+      return Astro.redirect(redirect);
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+
+async function loginUser(email:string, password:string){
+  try {
+    const res = await fetch(`${API_URL}/users/login`,
+      {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              email,
+              password
+          })
+      }
+    );
+
+    const data = (await res.json()) as any;
+
+    return data;
+
+  } catch(error){
+      alertMessage.status = 'error';
+      alertMessage.message = 'Ha habído un problema al iniciar sesión.';
+  }
+    
+}
+
+---
+
+<Layout title="Iniciar sesión">
+  <main>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Iniciar sesión"
+      color="color-dark"
+      desc="Accede para ver y guardar todos tus pedidos en un solo lugar, disfrutando de una experiencia de compra personalizada. ¡Tu conveniencia y seguridad son nuestra prioridad!"
+    />
+
+    <div class="container flex-dir-column">
+      <FormLayout>
+        <nav class="secondary-nav mb-4">
+          <li>
+            <a href="/login" class="active"> Iniciar sesión </a>
+          </li>
+          <li> 
+            <a href="/registro"> Registro </a>
+          </li>
+        </nav>
+        <form method="POST" class="form login-form">
+            {alertMessage.message && 
+                <p class={"form-alert " + alertMessage.status}>
+                    {alertMessage?.message}
+                </p>
+            }
+
+            <div class="form-element">
+                <label class={errors.invalidLogin ? 'invalid' : ''}>
+                    <span>Correo electrónico</span>
+                    <input value={email} name="email" required type="email">
+                </label>
+                <!-- {errors.email && <p class="field-error">{errors.email}</p>} -->
+            </div>
+            
+            <div class="form-element">
+                <label class={errors.invalidLogin ? 'invalid' : ''}>
+                    <span>Contraseña</span>
+                    <input value={password} name="password" required type="password">
+                </label>
+            </div>
+
+            <a href="/reset-password" data-astro-prefetch="load">¿Olvidaste la contraseña?</a>
+        
+            <footer>
+                <button type="submit">
+                    Iniciar sesión
+                </button>
+                <div class="flex flex-col gap-2 mt-4">
+                  <p class="mt-2 text[#626262]">¿Todavía no tienes tu cuenta?</p>
+                  <a href="/registro"> Crear cuenta de Elmundodelsaquito.es</a>
+                </div>
+            </footer>
+        </form>
+      </FormLayout>
+    </div>
+  </main>
+</Layout>

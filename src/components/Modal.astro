@@ -1,0 +1,78 @@
+---
+const { id, open, title } = Astro.props;
+---
+
+<style>
+  dialog {
+    position: fixed;
+    background-color: transparent;
+  }
+
+  dialog::backdrop {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background: rgb(0 0 0 / 62%);
+  }
+</style>
+
+<!-- <button onclick={`window.${id}.showModal()`}>{open}</button> -->
+<slot name="open" />
+
+<dialog id={id}>
+  <div
+    class="relative z-10"
+    aria-labelledby="modal-title"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div
+      onclick=`window.${id}.close()`
+      class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+    >
+    </div>
+
+    <div
+      class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:w-full sm:max-w-lg"
+    >
+      <header class="modal-header bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+        <h3
+          class="text-base font-semibold leading-6 mb-2 text-gray-900"
+          id="modal-title"
+        >
+          {title}
+        </h3>
+        <p class="text-sm mt-2 text-gray-500">
+          Are you sure you want to deactivate your account? All of your data
+          will be permanently removed. This action cannot be undone.
+        </p>
+      </header>
+
+      <slot name="modal-content" />
+
+      <div
+        class="modal-actions bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6"
+      >
+        <button
+          class="inline-flex w-full justify-center rounded-md bg-[#3d1a6c] px-3 py-2 text-sm font-semibold text-white shadow-sm sm:ml-3 sm:w-auto"
+        >
+          Cambiar contraseña
+        </button>
+        <button
+          onclick=`window.${id}.close();event.preventDefault()`
+          class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
+          >Cancelar</button
+        >
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  input {
+    padding-left: 0.75em;
+    outline: none;
+  }
+</style>

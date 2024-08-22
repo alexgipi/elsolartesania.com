@@ -1,0 +1,19 @@
+---
+
+import Jumbotron from "../components/Jumbotron.astro";
+import Layout from "../layouts/Layout.astro";
+
+---
+
+<Layout title="Welcome to Astro.">	
+	<main>
+		<Jumbotron
+        class="bg-404" 
+        title="Error 404"
+		desc="La pagina que estabas buscando no existe en este sitio web."
+		btnValue="Ir a la pagina de Inicio"
+        btnHref="/"
+        bgUrl="https://images.unsplash.com/photo-1610337673044-720471f83677?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1972&q=80">
+        </Jumbotron>
+	</main>
+</Layout>

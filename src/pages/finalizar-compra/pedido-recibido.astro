@@ -1,0 +1,113 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Jumbotron from "../../components/Jumbotron.astro";
+import OrderDetails from "../../components/OrderDetails.svelte";
+import { API_URL } from "../../services/ecommerce";
+const key = Astro.url.searchParams.get('key')! || undefined;
+console.log(key)
+const identityCookieValue = Astro.cookies.get("identity")?.value;
+
+let identity = null;
+let token: string | null = null;
+let order = null;
+let orderItems:any = [];
+
+try {
+  if (identityCookieValue) {
+    identity = JSON.parse(identityCookieValue);
+    token = identity.token;
+    
+  }
+
+  order = await getOrder(key);
+  console.log(order)
+  if(order?.items) orderItems = Object.values(order.items);
+} catch (error) {
+  console.error("Error al analizar el valor de la cookie:", error);
+  // Puedes tomar acciones adicionales aquí, según tus necesidades.
+}
+
+async function getOrder(orderNumber: string | undefined) {
+  try {
+    const res = await fetch(`${API_URL}/orders/${orderNumber}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': "Bearer " + token
+      },
+    });
+
+    const data = (await res.json()) as any;
+    console.log(data);
+    return data;
+    
+  } catch (error) {
+    console.error(error);
+  }
+}
+---
+
+<Layout title="Finalizar compra">
+  <main class="page-main order-received-page">
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Pedido recibido"
+      color="color-dark"
+      desc="Tu pedido se ha procesado con éxito. Gracias por elegirnos."
+    />
+
+    <div class="container flex-dir-column">
+      { order && <OrderDetails order={order} client:only="svelte"></OrderDetails>}
+    </div>
+  </main>
+</Layout>
+
+<style>
+  ul {
+    padding: 0 18px;
+    margin-bottom: 1rem;
+    position: relative;
+    margin: 0 0 30px;
+    background: #f8f8f8;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-radius: 0 0 20px 20px;
+  }
+
+  ul::before {
+    content: "";
+    background:
+      -webkit-linear-gradient(transparent 0, transparent 0),
+      -webkit-linear-gradient(135deg, #f8f8f8 33.33%, transparent 33.33%),
+      -webkit-linear-gradient(45deg, #f8f8f8 33.33%, transparent 33.33%);
+    width: 100%;
+    height: 23px;
+    position: absolute;
+    background-repeat: repeat;
+    background-size: 23px;
+    top: -23px;
+    left: 0;
+  }
+
+  li {
+    list-style: none;
+  }
+
+  th {
+    text-align: left;
+  }
+
+  table {
+    border-collapse: initial;
+  }
+
+  table a {
+    color: #3d1a6c;
+  }
+
+  .page-main {
+    margin-bottom: 5rem;
+  }
+</style>

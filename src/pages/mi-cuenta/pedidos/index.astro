@@ -1,0 +1,178 @@
+---
+import Jumbotron from "../../../components/Jumbotron.astro";
+import Layout from "../../../layouts/Layout.astro";
+import SecondaryNav from "../../../components/SecondaryNav.astro";
+import { formatCurrency, formatDate } from "../../../utils";
+import { ORDER_STATUS_VALUES } from "../../../consts"
+import { API_URL } from "../../../services/ecommerce";
+
+const identityCookieValue = Astro.cookies.get("identity")?.value;
+
+let identity = null;
+let token:string | null = null;
+let orders = [];
+
+
+try {
+  if (identityCookieValue) {
+    identity = JSON.parse(identityCookieValue);
+    token = identity.token;
+
+    orders = await userOrders();
+  }
+} catch (error) {
+  console.error("Error al analizar el valor de la cookie:", error);
+  // Puedes tomar acciones adicionales aquí, según tus necesidades.
+}
+
+async function userOrders(){
+  try {
+    const res = await fetch(`${API_URL}/orders`,
+      {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + token,
+          }
+      }
+    );
+
+    const data = (await res.json()) as any;
+    console.log(data)
+    return data;
+
+  } catch(error){
+      console.error(error);
+  }
+    
+}
+---
+
+<Layout title="Finalizar compra">
+  <main>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Mis pedidos"
+      color="color-dark"
+      desc="Accede para ver y guardar todos tus pedidos en un solo lugar, disfrutando de una experiencia de compra personalizada. ¡Tu conveniencia y seguridad son nuestra prioridad!"
+    />
+
+    <SecondaryNav></SecondaryNav>
+    
+    <div class="my-account container align-it-flex-start">
+      <div class="my-account-content padding-0">
+
+        <table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
+          <thead>
+            <tr>
+                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><span class="nobr">Pedido</span></th>
+                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date"><span class="nobr">Fecha</span></th>
+                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status"><span class="nobr">Estado</span></th>
+                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-total"><span class="nobr">Total</span></th>
+                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions"><span class="nobr">Acciones</span></th>
+            </tr>
+          </thead>
+      
+          <tbody>
+            { 
+              orders.map((order:any) => (
+                <tr class="woocommerce-orders-table__row woocommerce-orders-table__row--status-completed order">
+                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number" data-title="Pedido">
+                    <a href={"/mi-cuenta/pedidos/" + order.orderNumber}>
+                      #{order.orderNumber}
+                    </a>
+                  </td>
+
+                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date" data-title="Fecha">
+                    <time datetime={order.createdAt}>{formatDate(order.createdAt)}</time>
+                  </td>
+
+                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status" data-title="Estado">
+                    { ORDER_STATUS_VALUES[order.status]?.['es'] }
+                  </td>
+
+                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total" data-title="Total">
+                    <span class="woocommerce-Price-amount amount">
+                      {formatCurrency(order.total)}
+                    </span> 
+                      
+                      para {Object.keys(order.items).length} artículos
+                  </td>
+                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions" data-title="Acciones">
+                    <a href={"/mi-cuenta/pedidos/" + order.orderNumber} class="woocommerce-button button view">Ver</a>
+                  </td>
+                </tr>
+              ))            
+            }
+            
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+    .container {
+      gap: 30px;
+      flex-direction: column;
+    }
+  
+    .my-account-content {
+      border-radius: 4px;
+      color: #6e6e6e;
+      font-size: 0.9em;
+      width: 100%;
+      margin-bottom: 4rem;
+    }
+
+    table {
+      width: 100%;
+      text-align: left;
+      border-spacing: 0;
+      overflow: hidden;
+      outline: 1px solid #000;
+    }
+
+    table:not( .has-background ) th {
+      background-color: #fff;
+    }
+
+    table:not( .has-background ) tbody td {
+        background-color: #fff;
+    }
+
+    table:not( .has-background ) tbody tr:nth-child(2n) td, fieldset, fieldset legend {
+      background-color: #fff;
+    }
+
+    table thead th {
+      vertical-align: middle;
+      font-weight: 600;
+    }
+
+    table td, table th {
+      padding: 1.8em 1.6em;
+      font-size: 0.96em;
+    }
+
+    th {
+      color: #000;
+    }
+
+    table .button {
+      padding: 10px 20px;
+      color: #000;
+      background: #eee;
+    }
+
+    a {
+      color: #000;
+    }
+
+    tbody tr {
+        border-top: 1px solid;
+    }
+</style>
+  

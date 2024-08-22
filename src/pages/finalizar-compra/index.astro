@@ -1,0 +1,36 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Jumbotron from "../../components/Jumbotron.astro";
+
+import OrderSummary from "../../components/OrderSummary.svelte";
+
+const identityCookieValue = Astro.cookies.get("identity")?.value;
+let identity = null;
+
+try {
+  if (identityCookieValue) {
+    identity = JSON.parse(identityCookieValue);
+    console.log(identity);
+  }
+} catch (error) {
+  console.error("Error al analizar el valor de la cookie:", error);
+  // Puedes tomar acciones adicionales aquí, según tus necesidades.
+}
+---
+
+<Layout title="Finalizar compra">
+  <main>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Finalizar compra"
+      color="color-dark"
+      desc="Antes de confirmar tu pedido, te animamos a revisar con atención los detalles de tu compra y asegurarte de que todo esté perfecto. Para completar el proceso, por favor, rellena el breve formulario a continuación con tus datos."
+    />
+
+    <div class="container flex-dir-column">
+      
+      <OrderSummary identity={identity} client:only></OrderSummary>
+    </div>
+  </main>
+</Layout>
+

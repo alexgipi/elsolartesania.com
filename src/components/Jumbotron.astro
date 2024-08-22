@@ -1,0 +1,188 @@
+---
+interface Props {
+  title: string;
+  desc: string;
+  btnValue?: string;
+  btnHref?: string;
+  class?: string;
+  bgUrl?: string;
+  bgColor?: string;
+  color?: string;
+  backPath?:string;
+}
+
+const {
+  title,
+  desc,
+  btnValue,
+  btnHref,
+  class: className,
+  bgUrl,
+  bgColor,
+  color,
+  backPath
+} = Astro.props;
+
+const backgroundUrl = `url(${bgUrl})`;
+const backgroundColor = bgColor;
+const textColor = color || "color-white";
+---
+
+<section class={"jumbotron " + className}>
+  <div class="container">
+    <div class="jumbotron-content">
+      <h1 class={"jumbotron-title align-it-center flex " + textColor}>
+        { backPath && 
+          <a href={backPath} class="back-btn" id="backButton">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M19 11H7.83l4.88-4.88c.39-.39.39-1.03 0-1.42-.39-.39-1.02-.39-1.41 0l-6.59 6.59c-.39.39-.39 1.02 0 1.41l6.59 6.59c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L7.83 13H19c.55 0 1-.45 1-1s-.45-1-1-1z"></path></svg>
+          </a>
+        }
+        {title}
+      </h1>
+      <div class={"jumbotron-desc " + textColor} set:html={desc}></div>
+      {
+        btnHref && btnValue && (
+          <a href={btnHref} class="btn btn-white btn-lg">
+            {btnValue}
+          </a>
+        )
+      }
+      {
+        !btnHref && btnValue && (
+          <button class="btn btn-white btn-lg">{btnValue}</button>
+        )
+      }
+    </div>
+
+    <!-- <div class="jumbotron-content">
+      <div style="display: flex;align-items: center;">
+        <img class="object-fit-contain" alt="Imagen de cojínes térmicos medianos" src="https://elmundodelsaquito.es/wp-content/uploads/sites/4/2023/09/puntosG3-2.webp" style="height: 326px;transform: scale(1.1) rotate(17deg) translateY(-31px);position: absolute;right: 20px;transition: filter 0.3s ease;">
+        <img class="object-fit-contain" alt="Imagen de cojínes térmicos medianos" src="https://elmundodelsaquito.es/wp-content/uploads/sites/4/2023/09/zapatillas-leopardo.webp" style="height: 326px;transform: scale(0.8) rotate(13deg) translateY(4px);filter: grayscale(1);transition: all 0.3s;">
+      </div>
+    </div> -->
+  </div>
+</section>
+
+<style define:vars={{ backgroundUrl, backgroundColor }}>
+  .jumbotron {
+    background-image: var(--backgroundUrl);
+    height: 54vh;
+    padding: 5rem 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 400px;
+    position: relative;
+    border-bottom: 1px solid;
+  }
+
+  .jumbotron.large-desc .jumbotron-desc {
+    max-width: 100%;
+  }
+
+  .jumbotron.jumbotron--small {
+    height: auto;
+    min-height: 140px;
+  }
+
+  .jumbotron.with-white-gradient::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(0deg, white 5%, #ffffffdb 28%, white 100%);
+    backdrop-filter: brightness(1.3);
+  }
+  
+
+  .jumbotron.with-white-gradient .jumbotron-title,
+  .jumbotron.with-white-gradient .jumbotron-desc {
+    color: #000;
+  }
+
+  .jumbotron.with-white-gradient .btn {
+    border: 1px solid #ddd;
+  }
+
+  .jumbotron-content {
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .jumbotron-content .btn {
+    margin-top: 2rem;
+  }
+
+  .jumbotron.with-mask::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(60deg, #11091b 30%, #11091bf0 50%, #160c2461);
+  }
+
+  .jumbotron.with-border {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #eeeeeeb0;
+  }
+
+  .jumbotron-title {
+    margin: 0;
+    margin-bottom: 1rem;
+    font-size: 3.2em;
+    font-weight: 100;
+    text-transform: uppercase;
+  }
+
+  .jumbotron-desc {
+    max-width: 720px;
+    opacity: 0.88;
+    text-wrap: pretty;
+  }
+
+  .jumbotron-desc.color-dark {
+    color: #000;
+    font-size: 0.96em;
+  }
+
+  .back-btn {
+    background: none;
+    margin-right: 12px;
+    color: currentColor;
+    border-color: currentColor;
+    border: none;
+    padding: 0;
+    width: 60px;
+    height: 60px;
+    margin-left: -14px;
+  }
+
+  .back-btn svg {
+    fill: currentColor;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+  }
+
+  @media(max-width: 900px){
+    .jumbotron.jumbotron--small {
+      padding-top: 1rem;
+    }
+  }
+
+  @media(max-width: 600px){
+    .jumbotron-title {
+      font-size: 2.2em;
+    }
+  }
+</style>

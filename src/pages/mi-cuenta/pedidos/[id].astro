@@ -1,0 +1,201 @@
+---
+import Jumbotron from "../../../components/Jumbotron.astro";
+import Layout from "../../../layouts/Layout.astro";
+import SecondaryNav from "../../../components/SecondaryNav.astro";
+import { formatCurrency, formatDate } from "../../../utils";
+import { ORDER_STATUS_VALUES } from "../../../consts"
+import { API_URL } from "../../../services/ecommerce";
+
+const { id } = Astro.params;
+const identityCookieValue = Astro.cookies.get("identity")?.value;
+
+let identity = null;
+let token: string | null = null;
+let order = null;
+let orderItems:any = [];
+
+try {
+  if (identityCookieValue) {
+    identity = JSON.parse(identityCookieValue);
+    token = identity.token;
+
+    order = await getOrder(id);
+    if(order?.items) orderItems = Object.values(order.items);
+  }
+} catch (error) {
+  console.error("Error al analizar el valor de la cookie:", error);
+  // Puedes tomar acciones adicionales aquí, según tus necesidades.
+}
+
+async function getOrder(orderNumber: string | undefined) {
+  try {
+    const res = await fetch(`${API_URL}/orders/${orderNumber}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    const data = (await res.json()) as any;
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
+---
+
+<Layout title="Finalizar compra">
+  <main>
+    { order && 
+      <Jumbotron
+        class="jumbotron--small bg-position-center large-desc"
+        backPath="/mi-cuenta/pedidos"
+        title={"Pedido #" + id}
+        color="color-dark"
+        desc={`El pedido #${order.orderNumber} se realizó el ${formatDate(order.createdAt)} y está actualmente '${ORDER_STATUS_VALUES[order?.status]?.es}'.`}
+      />
+    }
+
+    <SecondaryNav />
+
+    <div class="container align-it-flex-start">
+
+      <div class="my-account-content padding-0">
+        <table
+          class="woocommerce-table woocommerce-table--order-details shop_table order_details"
+        >
+          <thead>
+            <tr>
+              <th class="woocommerce-table__product-name product-name"
+                >Producto</th
+              >
+              <th class="woocommerce-table__product-table product-total"
+                >Total</th
+              >
+            </tr>
+          </thead>
+
+          <tbody>
+            {
+              orderItems.map((item:any) => (
+                <tr class="woocommerce-table__line-item order_item">
+                  <td class="woocommerce-table__product-name product-name">
+                    <a href="https://elmundodelsaquito.es/producto/antifaz-relajante-notas-musicales/">
+                     {item.name}
+                    </a>
+                    <strong class="product-quantity">× {item.quantity}</strong>
+                  </td>
+
+                  <td class="woocommerce-table__product-total product-total">
+                    <span class="woocommerce-Price-amount amount">
+                      {formatCurrency(item.price * item.quantity)}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+
+          <tfoot>
+            <tr>
+              <th scope="row">Subtotal:</th>
+              <td>
+                <span class="woocommerce-Price-amount amount">
+                  {formatCurrency(order?.subtotal || 0)}
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Envío:</th>
+              <td>
+                <span class="woocommerce-Price-amount amount">
+                  {formatCurrency(order?.shippingCost || 0)}
+                </span>
+                &nbsp;
+                <small class="shipped_via">
+                  vía {order?.shippingType}
+                </small>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">Método de pago:</th>
+              <td>Tarjeta de crédito (Stripe)</td>
+            </tr>
+            <tr>
+              <th scope="row">Total:</th>
+              <td>
+                <span class="woocommerce-Price-amount amount">
+                  {formatCurrency(order?.total || 0)}
+                </span>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .container {
+      gap: 30px;
+      flex-direction: column;
+  }
+
+  .my-account-content {
+    padding: 20px;
+    border-radius: 4px;
+    color: #6e6e6e;
+    font-size: 0.9em;
+    width: 100%;
+  }
+
+  table {
+    width: 100%;
+    text-align: left;
+    border-spacing: 0;
+    border-radius: 9px;
+    overflow: hidden;
+  }
+
+  table:not(.has-background) th {
+    background-color: #fafafa;
+  }
+
+  table:not(.has-background) tbody td {
+    background-color: #fdfdfd;
+  }
+
+  table:not(.has-background) tbody tr:nth-child(2n) td,
+  fieldset,
+  fieldset legend {
+    background-color: #fbfbfb;
+  }
+
+  table thead th {
+    vertical-align: middle;
+    font-weight: 600;
+  }
+
+  table td,
+  table th {
+    padding: 1.8em 1.6em;
+    font-size: 0.96em;
+  }
+
+  th {
+    color: #2a1448;
+  }
+
+  table .button {
+    padding: 10px 20px;
+    color: #000;
+    background: #eee;
+  }
+
+  a {
+    color: #3d1a6c;
+  }
+</style>

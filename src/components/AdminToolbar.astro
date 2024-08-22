@@ -1,0 +1,202 @@
+---
+import { API_URL } from "../services/ecommerce";
+const { identity } = Astro.props;
+
+// const ADMIN_URL = "https://admin.elmundodelsaquito.es/admin"
+const ADMIN_URL = "http://localhost:3501/admin"
+
+let ordersCounter = 0;
+
+const processingOrders = await getProcessingOrders();
+
+if(processingOrders){
+    ordersCounter = processingOrders.length;
+}
+
+async function getProcessingOrders(){
+    try {
+    const res = await fetch(
+        `${API_URL}/orders/status/pending`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${identity.token}`
+            }
+        }
+    );
+
+    const data = (await res.json()) as any;
+
+    return data;
+
+  } catch(error){
+      console.log(error)
+  }
+}
+---
+<nav class="admin-nav flex justify-between bg-gray-900 text-white">
+    <div class="px-5 xl:px-6 flex w-full items-center">
+
+        <div class="admin-nav-left flex flex-1">
+            <a class="admin-nav-logo text-xl flex-1 font-bold font-heading" target="_blank">
+                <span class="inline-flex transform scale-x-[-1]">F</span>lexi CMS
+            </a>
+        </div>
+
+        <!-- Nav Links -->
+        <ul class="admin-nav-menu hidden justify-center md:flex px-4 flex-auto mx-auto font-heading" style="font-size: 0.9em;">
+            <li class="flex">
+                <a target="_blank" class="hover:text-gray-200 flex items-center gap-2 cursor-pointer" href={ADMIN_URL}>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                        <path d="M0 0h24v24H0V0z" fill="none"></path>
+                        <path
+                            d="M4 13h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zm0 8h6c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm10 0h6c.55 0 1-.45 1-1v-8c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1v8c0 .55.45 1 1 1zM13 4v4c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1h-6c-.55 0-1 .45-1 1z">
+                        </path>
+                    </svg> 
+                    Dashboard
+                </a>
+            </li>
+
+            <li class="flex"> 
+                <a target="_blank" class="hover:text-gray-200 flex items-center gap-2 cursor-pointer" href={ADMIN_URL + "/orders"}>
+                    Pedidos <span class="admin-badge">{ordersCounter || 0}</span>
+                </a>
+            </li>
+
+            <li class="flex dropdown">
+                <a class="hover:text-gray-200 flex items-center gap-2 cursor-pointer" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                        <path d="M0 0h24v24H0V0z" fill="none"></path>
+                        <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4 11h-3v3c0 .55-.45 1-1 1s-1-.45-1-1v-3H8c-.55 0-1-.45-1-1s.45-1 1-1h3V8c0-.55.45-1 1-1s1 .45 1 1v3h3c.55 0 1 .45 1 1s-.45 1-1 1z">
+                        </path>
+                    </svg>
+                    Añadir
+                    <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"> <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path> </svg>
+                </a>
+                <ul class="admin-submenu">
+                    <li><a target="_blank" href={ADMIN_URL + "/media/create"}>Medios</a></li>
+                    <li><a target="_blank" href={ADMIN_URL + "/pages/create"}>Página</a></li>
+                    <li><a target="_blank" href={ADMIN_URL + "/products/create"}>Producto</a></li>
+                    <li><a target="_blank" href={ADMIN_URL + "/product-categories/create"}>Categoría de producto</a></li>
+                    <li><a target="_blank" href={ADMIN_URL + "/product-attributes/create"}>Atributo de producto</a></li>
+                    <li><a target="_blank" href={ADMIN_URL + "/orders/create"}>Pedido</a></li>
+                    <li><a target="_blank" href={ADMIN_URL + "/users/create"}>Usuario</a></li>
+                </ul>
+            </li>
+
+            <!-- <li class="flex">
+                <a class="hover:text-gray-200 flex items-center gap-2 cursor-pointer" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                        <path d="M0 0h24v24H0V0z" fill="none"></path>
+                        <path
+                            d="M7 14c-1.66 0-3 1.34-3 3 0 1.31-1.16 2-2 2 .92 1.22 2.49 2 4 2 2.21 0 4-1.79 4-4 0-1.66-1.34-3-3-3zm13.71-9.37l-1.34-1.34c-.39-.39-1.02-.39-1.41 0L9 12.25 11.75 15l8.96-8.96c.39-.39.39-1.02 0-1.41z">
+                        </path>
+                    </svg>
+                    Personalizar
+                </a>
+            </li> -->
+
+            <!-- <li class="flex">
+                <a class="hover:text-gray-200 flex items-center gap-2 cursor-pointer" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                        <rect fill="none" height="24" width="24"></rect>
+                        <path
+                            d="M19.5,12c0-0.23-0.01-0.45-0.03-0.68l1.86-1.41c0.4-0.3,0.51-0.86,0.26-1.3l-1.87-3.23c-0.25-0.44-0.79-0.62-1.25-0.42 l-2.15,0.91c-0.37-0.26-0.76-0.49-1.17-0.68l-0.29-2.31C14.8,2.38,14.37,2,13.87,2h-3.73C9.63,2,9.2,2.38,9.14,2.88L8.85,5.19 c-0.41,0.19-0.8,0.42-1.17,0.68L5.53,4.96c-0.46-0.2-1-0.02-1.25,0.42L2.41,8.62c-0.25,0.44-0.14,0.99,0.26,1.3l1.86,1.41 C4.51,11.55,4.5,11.77,4.5,12s0.01,0.45,0.03,0.68l-1.86,1.41c-0.4,0.3-0.51,0.86-0.26,1.3l1.87,3.23c0.25,0.44,0.79,0.62,1.25,0.42 l2.15-0.91c0.37,0.26,0.76,0.49,1.17,0.68l0.29,2.31C9.2,21.62,9.63,22,10.13,22h3.73c0.5,0,0.93-0.38,0.99-0.88l0.29-2.31 c0.41-0.19,0.8-0.42,1.17-0.68l2.15,0.91c0.46,0.2,1,0.02,1.25-0.42l1.87-3.23c0.25-0.44,0.14-0.99-0.26-1.3l-1.86-1.41 C19.49,12.45,19.5,12.23,19.5,12z M12.04,15.5c-1.93,0-3.5-1.57-3.5-3.5s1.57-3.5,3.5-3.5s3.5,1.57,3.5,3.5S13.97,15.5,12.04,15.5z">
+                        </path>
+                    </svg>
+                    Ajustes 
+                    <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path>
+                    </svg>
+                </a>
+            </li> -->
+
+            <li class="flex">
+                <a class="hover:text-gray-200 flex items-center gap-2 cursor-pointer" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor">
+                        <path d="M0 0h24v24H0V0z" fill="none"></path>
+                        <path
+                            d="M3 17.46v3.04c0 .28.22.5.5.5h3.04c.13 0 .26-.05.35-.15L17.81 9.94l-3.75-3.75L3.15 17.1c-.1.1-.15.22-.15.36zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z">
+                        </path>
+                    </svg>
+                    Editar página
+                </a>
+            </li>
+        </ul>
+
+        <!-- Header Icons -->
+        <div class="admin-nav-right hidden flex-1 xl:flex justify-end items-center space-x-5 items-center">
+            <a class="admin-identity flex items-center hover:text-gray-200" target="_blank"> 
+                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24px" viewBox="0 0 24 24" width="24px" fill="currentColor"> <g> <rect fill="none" height="24" width="24"></rect> <rect fill="none" height="24" width="24"></rect> </g> <g> <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88C7.55 15.8 9.68 15 12 15s4.45.8 6.14 2.12C16.43 19.18 14.03 20 12 20z"></path> </g> </svg>
+                <span>{identity.username}</span>
+                <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 6"> <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"></path> </svg>
+            </a>
+        </div>
+    </div>
+</nav>
+
+<style>
+
+    .admin-nav {
+        background: #000000;
+        height: 52px;
+    }
+
+    .admin-nav-menu {
+        display: flex;
+        height: 100%;
+    }
+
+
+    .admin-nav-menu li {
+        padding: 0 1.5rem;
+    }
+
+    .admin-nav-menu li.dropdown {
+        position: relative;
+    }
+
+    .admin-submenu {
+        background: #010101;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 1000;
+        min-width: 195px;
+        padding: 10px 0;
+        visibility: hidden;
+    }
+
+    .dropdown:hover .admin-submenu {
+        visibility: visible;
+    }
+
+    .admin-submenu li {
+        display: flex;
+        padding: 0;
+    }
+    .admin-submenu li a {
+        padding: 0.5rem 1.25rem;
+        width: 100%;
+    }
+
+    .admin-badge {
+        display: inline-flex;
+        width: 20px;
+        height: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e62d2d;
+        border-radius: 3px;
+    }
+
+    .admin-identity {
+        display: flex;
+        gap: 0.75rem;
+        font-size: .9rem;
+        cursor: pointer;
+    }
+</style>

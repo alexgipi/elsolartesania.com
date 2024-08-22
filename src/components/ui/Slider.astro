@@ -1,0 +1,240 @@
+---
+import { API_URL, UPLOADS_URL } from "../../services/ecommerce"
+
+const { 
+    slider 
+} = Astro.props;
+
+console.log(API_URL)
+
+slider.slider_items = [slider.slider_items[0]]
+
+console.log(slider)
+---
+
+{
+    slider.slider_items.map((item:any) => (
+        <section 
+        class="jumbotron-hero bg-center bg-no-repeat" 
+        style={item.bgImage?.mimetype && item.bgImage?.mimetype.split("/")[0] === "image" ? `background-image: url(${UPLOADS_URL}${item.bgImage?.file})` : ""}
+        >
+            {item.bgImage?.mimetype && item.bgImage?.mimetype.split("/")[0] === "video" &&
+                <video src={`${UPLOADS_URL}${item.bgImage?.file}`} class="jumbotron-hero__bg-video" autoplay muted loop></video>
+            }
+            
+            <div class="container py-4 flex">
+                <div class="flex flex-col">
+                    <h1 class="jumbotron-title mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl">
+                        {item.title}
+                    </h1>
+                    
+                    <div class="jumbotron-content" set:html={item.content}>
+                    </div>
+                    
+                    <div class="flex gap-3 flex-col sm:flex-row">
+                        { item.actionButtons.map((button:any) => (
+                            <a href={button.link} class={"jumbotron-button text-base font-medium rounded-lg" + ` jumbotron-button--${button?.buttonClass || "primary"}`}>
+                                {button.text}
+                                <svg class="w-3.5 h-3.5 ms-2 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+                                </svg>
+                            </a>
+                          ))
+                        }
+                    </div>
+                    <div class="slider-navigation">
+                        <span class="active"></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="slider-controls">
+                    
+                        <button class="slider-controls-btn prev">
+                            <svg class="slider-controls-btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"></path></svg>
+                        </button>
+                        <button class="slider-controls-btn next">
+                            <svg class="slider-controls-btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"></path></svg>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="jumbotron-item-featured-block">
+                    <img width="452" height="410" class="item-featured-principal-image object-fit-contain" alt="Aromaterapia relajante" src="https://pub-247023e91d404b09aaaab58f10ac2699.r2.dev/uploads/perfumes-solidos-transparente.webp"/>
+                    <img width="300" height="152" class="item-featured-decoration-shape object-fit-contain" alt="Aromaterapia relajante" src="https://pub-247023e91d404b09aaaab58f10ac2699.r2.dev/uploads/thumbnail/vecteezylavender-png-with-ai-generated30568205.png"/>
+                </div>
+            </div>
+        </section>
+    ))
+}
+
+
+<style>
+    .jumbotron-hero {
+        padding: 5rem 0;
+        min-height: calc(60vh - 100px);
+        align-items: center;
+        display: flex;
+        position: relative;
+        background-size: cover;
+        background-color: #ffffff;
+        border-bottom: 1px solid #000;
+    }
+
+    .jumbotron-hero.with-bg {
+        &::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1e0d34ab;
+        }
+    }
+
+    .jumbotron-hero__bg-video {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
+
+    .jumbotron-title {
+        text-wrap: balance;
+        line-height: 1.2;
+        max-width: 1140px;
+        color: #000;
+        text-transform: uppercase;
+        font-weight: 100;
+    }
+
+
+    .jumbotron-button {
+        padding: 16px 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        border-radius: 0;
+        text-transform: uppercase;
+        gap: 0 16px;
+    }
+
+    .jumbotron-button--primary {
+        background: #111;
+        backdrop-filter: blur(4px);
+        color: #fff;
+        font-weight: 600;
+    }
+
+    .jumbotron-button--secondary {
+        background: #fff;
+        color: #231534;
+        font-weight: 600;
+        padding: 16px 32px;
+    }
+
+    .slider-navigation {
+        margin-top: 3rem;
+        height: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .slider-navigation span {
+        min-width: 36px;
+        height: 10px;
+        background: #dadada;
+        border-radius: 0;
+        cursor: pointer;
+        transition: min-width 0.2s ease-in-out, background 0.2s ease-in-out;
+
+        &.active {
+            background: #111;
+            min-width: 60px;
+        }
+
+        &:not(.active):hover {
+            background: #888;
+            min-width: 50px;
+        }
+    }
+
+    .slider-controls {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 0;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    .slider-controls-btn {
+        width: 42px;
+        height: 42px;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #919191;
+        border-radius: 12px;
+        color: #212121;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .slider-controls-btn.prev {
+        transform: scaleX(-1);
+    }
+
+    .slider-controls-btn-icon {
+        width: 24px;
+        height: 24px;
+    }
+
+    .jumbotron-item-featured-block {
+        display: flex;
+        translate: -24px -15px;
+        position: relative;
+    }
+
+    .item-featured-principal-image {
+        transition: all 0.6s ease;
+        filter: drop-shadow(4px 3px 4px rgba(0, 0, 0, 0.3));
+    }
+
+    .item-featured-decoration-shape {
+        filter: drop-shadow(4px 3px 4px rgba(0, 0, 0, 0.3));
+        position: absolute;
+        bottom: 82px;
+        right: -7px;
+        transform: rotate(47deg);
+        transition: all 0.6s ease;
+    }
+
+    .jumbotron-item-featured-block:hover {
+        & .item-featured-principal-image {
+            transform: scale(1.1);
+        }
+
+        & .item-featured-decoration-shape {
+            transform: rotate(34deg) translate(13px, 12px);
+        }
+    } 
+
+</style>
+
+<style is:global>
+    .jumbotron-content p {
+        font-size: 16px;
+        opacity: 0.85;
+        color: #000;
+        max-width: 660px;
+        margin-bottom: 2rem;
+        text-wrap: pretty;
+    }
+</style>

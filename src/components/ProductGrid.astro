@@ -1,0 +1,46 @@
+---
+import { formatCurrency } from "../utils.ts";
+import AddToCartButton from "./AddToCartButton.svelte";
+import ProductCard from "./ui/productCard.astro";
+
+interface Props {
+  class?:string,
+  products: any[];
+}
+const {class: className, products } = Astro.props;
+
+---
+
+<div class:list={["product-grid", className]}>
+    {
+      products?.map((product: any, index:number) => (
+        <ProductCard product={product}></ProductCard>
+      ))
+    }
+</div>
+
+<style>
+  .btn-add-to-cart--small {
+    padding: 9px 20px;
+    display: flex;
+    gap: 12px;
+    background: #f8f3fe;
+    border-radius: 8px;
+    margin-top: 16px;
+    color: #3d1a6c;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-add-to-cart--small.out-of-stock {
+    background: #f4f4f4;
+    color: #707070;
+    opacity: 0.6;
+  }
+
+  .card-actions {
+    width:100%;
+    display: flex;
+  }
+
+</style>

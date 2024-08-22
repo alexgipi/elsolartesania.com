@@ -1,0 +1,316 @@
+---
+export const prerender = false;
+import Dropdown from './ui/Dropdown.astro';
+import ToggleCart from './ToggleCart.svelte';
+import AdminToolbar from './AdminToolbar.astro';
+import { API_URL, UPLOADS_URL } from '../services/ecommerce';
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1); // remove the first "/"
+
+let identityCookie:any = Astro.cookies.get('identity');
+let identity = null;
+if(identityCookie){
+  identity = JSON.parse(identityCookie.value)
+}
+
+const admin_roles = ['admin', 'super_admin']
+
+const menuItems = await getMainNav();
+
+async function getMainNav(){
+    try {
+    const res = await fetch(
+        `${API_URL}/menus/menu-principal`,
+        {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        }
+    );
+
+    const data = (await res.json()) as any;
+
+    return data.menu_items;
+
+  } catch(error){
+      console.log(error)
+  }
+}
+---
+
+<!-- { identity && admin_roles.includes(identity.role)  &&
+
+  <AdminToolbar identity={identity}></AdminToolbar>
+
+} -->
+
+<header>
+  <div class="container">
+    <a href="/">
+      <img width="210" height="50" src="https://elsolartesania.com/wp-content/uploads/2018/04/cropped-cropped-logo-el-sol.png" class="custom-logo" alt="El Sol – Tu tienda online de artesanía" decoding="async" fetchpriority="high" srcset="https://elsolartesania.com/wp-content/uploads/2018/04/cropped-cropped-logo-el-sol.png 550w, https://elsolartesania.com/wp-content/uploads/2018/04/cropped-cropped-logo-el-sol-500x127.png 500w, https://elsolartesania.com/wp-content/uploads/2018/04/cropped-cropped-logo-el-sol-416x106.png 416w" sizes="(max-width: 550px) 100vw, 550px">
+    </a>
+    
+    <nav class="main-nav">
+      <div class="main-nav-items">
+        {
+          menuItems.map((menuItem:any) => (
+            <a class={'/'+currentPath === menuItem.link ? "active" : ""} href={menuItem.link}>{menuItem.label}</a>
+          ))
+        }
+      </div>
+      
+    </nav>
+
+
+    <button class="mobile-menu-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20px" width="20px" viewBox="0 -960 960 960" fill="currentColor"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"></path></svg>
+      Menú
+    </button>
+
+    <!-- <div class="header-search">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        height="24px"
+        viewBox="0 0 24 24"
+        width="24px"
+        fill="currentColor"
+        ><path d="M0 0h24v24H0V0z" fill="none"></path><path
+          d="M15.5 14h-.79l-.28-.27c1.2-1.4 1.82-3.31 1.48-5.34-.47-2.78-2.79-5-5.59-5.34-4.23-.52-7.79 3.04-7.27 7.27.34 2.8 2.56 5.12 5.34 5.59 2.03.34 3.94-.28 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+        ></path></svg
+      >
+      <input placeholder="Buscar productos..." />
+    </div> -->
+    <div class="header__right">
+
+      <ToggleCart client:load/>
+
+      { identity &&
+        <Dropdown>
+          <div id="dropdownInformation" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-52 dark:bg-gray-700 dark:divide-gray-600">
+            <div class="px-4 py-3 text-sm text-gray-900 dark:text-white">
+              <div><strong>Usuario:</strong> {identity.username}</div>
+              <div class="font-medium truncate">{identity.email}</div>
+            </div>
+            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownInformationButton">
+              <li>
+                <a href="/mi-cuenta" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Escritorio</a>
+              </li>
+              <li>
+                <a href="/mi-cuenta/pedidos" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Mis pedidos</a>
+              </li>
+              <li>
+                <a href="/mi-cuenta/direcciones" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Direcciones</a>
+              </li>
+              {/* <li>
+                <a href="/mi-cuenta/metodos-de-pago" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Métodos de pago</a>
+              </li> */}
+              <li>
+                <a href="/mi-cuenta/detalles" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Detalles de mi cuenta</a>
+              </li>
+            </ul>
+            <div class="py-2">
+              <a href="/logout" data-astro-prefetch="false" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Cerrar sesión</a>
+            </div>
+          </div>  
+        </Dropdown>
+      }
+
+      { !identity &&
+        <a data-astro-prefetch="load" href="/login" id="dropdownInformationButton" class="text-white uppercase font-extrabold whitespace-nowrap bg-black focus:ring-4 focus:outline-none focus:ring-violet-300 text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+          Iniciar sesión
+        </a>
+      }
+      
+    </div>
+  </div>
+</header>
+
+<!-- <StoreMessage client:load></StoreMessage> -->
+
+<!-- <CheckoutModal client:load></CheckoutModal> -->
+
+<style>
+  header {
+    padding: 18px 0;
+    backdrop-filter: blur(28px);
+    background-color: #ffffffeb;
+    position: sticky;
+    z-index: 999;
+    top: 0;
+    border-bottom: 1px solid #111;
+  }
+
+  header .container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .auth-toggle {
+    color: #424242;
+    padding: 12px;
+    border-radius: 8px;
+    background: white;
+    height: 44px;
+    box-shadow: 1px 1px 10px #f2f2f2f2;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .auth-toggle.login-btn {
+    font-size: 0.86em;
+    color: #000;
+    font-weight: 500;
+    justify-content: center;
+    min-width: 78px;
+  }
+
+  .auth-toggle svg {
+    fill: currentColor;
+  }
+
+  .header__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+  }
+
+  .header-logo {
+    height: auto;
+    width: 170px;
+  }
+
+  .main-nav {
+    overflow: auto;
+    scrollbar-color: #ffffff #e3e3e345;
+    scrollbar-width: thin;
+    padding: 6px 0;
+  }
+
+  .main-nav-items {
+    display: flex;
+    max-width: 710px;
+    white-space: nowrap;
+  }
+
+  .main-nav-items a {
+    color: #000000d9;
+    text-decoration: none;
+    padding: 9px 16px;
+    border-radius: 9px;
+    font-size: 0.8em;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .main-nav-items a.active {
+    background: #ff5d2912;
+    color: #ff5d29;
+  }
+
+  .header-search {
+    display: flex;
+    align-items: center;
+    border: 1px solid #e7e7e7;
+    border-radius: 9px;
+    height: 38px;
+    position: relative;
+    color: #787878;
+  }
+
+  .header-search svg {
+    position: absolute;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .header-search input {
+    width: 204px;
+    border: none;
+    padding-left: 42px;
+    height: 100%;
+    background: transparent;
+    border-radius: 9px;
+  }
+
+
+  @media(max-width:1220px){
+      .header-logo {
+          height: auto;
+          width: 140px;
+      }
+
+      .main-nav-items {
+        gap: 4px;
+      }
+
+      .main-nav-items a {
+          font-size: 0.78em;
+          padding: 9px 12px;
+      }
+  }
+
+  @media(max-width:1100px){
+
+      .main-nav {
+        width: 100%;
+        order: 3;
+      }
+
+      .main-nav-items {
+        max-width: 100px;
+      }
+  }
+
+
+  .mobile-menu-btn {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9em;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+
+  @media(max-width:550px){
+
+    header .container {
+      flex-wrap: wrap;
+    }
+
+    .mobile-menu-btn {
+      display: flex;
+    }
+
+    .main-nav {
+      width: 100%;
+      order: 3;
+      display: none;
+    }
+
+    .main-nav-items {
+      max-width: 100px;
+    }
+
+    .header__right {
+        width: 100%;
+        justify-content: space-between;
+    }
+  }
+
+
+  
+
+</style>

@@ -1,0 +1,29 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Jumbotron from "../../components/Jumbotron.astro";
+import ProductGrid from "../../components/ProductGrid.astro";
+
+import { getCategoryBySlug, getCategoryProducts } from "../../services/ecommerce";
+
+const {category:categorySlug} = Astro.params;
+
+const category:any = await getCategoryBySlug(categorySlug || '');
+const catProducts = await getCategoryProducts(categorySlug || '')
+---
+
+<Layout title={category?.name}>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title={category?.name}
+      color="color-dark"
+      desc={category?.description}
+    />
+
+    <div class="container flex-dir-column">
+	    <section>
+        <ProductGrid products={catProducts}></ProductGrid>
+      </section>
+    </div>
+</Layout>
+
+<style></style>

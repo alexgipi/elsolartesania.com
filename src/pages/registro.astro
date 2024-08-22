@@ -1,0 +1,216 @@
+---
+import Jumbotron from "../components/Jumbotron.astro";
+import FormLayout from "../layouts/FormLayout.astro";
+import Layout from "../layouts/Layout.astro";
+import { API_URL } from "../services/ecommerce";
+
+interface AlertMessage {
+    status: string | null
+    message: string | null
+}
+
+let alertMessage:AlertMessage = {
+    status: null,
+    message: null,
+};
+
+const errors = { invalidEmail: false, invalidPassword: false };
+
+let email:any = '';
+let password:any = '';
+let passwordRepeat:any = '';
+
+const isLoggedIn = Astro.cookies.has('identity');
+
+if (isLoggedIn) return Astro.redirect('/');
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.formData();
+    email = formData.get("email");
+    password = formData.get("password");
+    passwordRepeat = formData.get("password-repeat");
+
+    if(password.length < 8 || password.length > 30) {
+      errors.invalidPassword = true;
+      alertMessage.status = 'error';
+      alertMessage.message = 'La contraseña debe tener entre 8 y 30 caracteres';
+
+    } else if(password !== passwordRepeat) {
+      errors.invalidPassword = true;
+      alertMessage.status = 'error';
+      alertMessage.message = 'Las contraseñas no coinciden';
+
+    } else {
+      const newUserData = await createUser(email, password);
+
+      if(newUserData.ok){        
+          const { user } = newUserData;
+          alertMessage.status = 'success';
+          alertMessage.message = 'Cuenta creada correctamente';
+
+          const loginUserData = await loginUser(email, password);
+
+          if(loginUserData.ok){        
+              const { user, token } = loginUserData;
+              alertMessage.status = 'success';
+              alertMessage.message = 'Sesión iniciada correctamente';
+
+              const identity = {
+                  ...user,
+                  token
+              }
+
+              Astro.cookies.set("identity", JSON.stringify(identity))
+              return Astro.redirect('/');
+              
+          }else {
+            errors.invalidEmail = true;
+            alertMessage.status = 'error';
+            alertMessage.message = 'Error: Usuario y/o contraseña invalidos';
+          }
+          
+      }else {
+        errors.invalidEmail = true;
+        alertMessage.status = 'error';
+        alertMessage.message = 'Ya existe una cuenta con este correo electrónico';
+      }
+
+    }
+
+   
+
+
+    
+
+    const hasErrors = Object.values(errors).some(msg => msg)
+
+    if (!hasErrors) {
+      
+      // return Astro.redirect('/');
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+
+async function loginUser(email:string, password:string){
+  try {
+    const res = await fetch(`${API_URL}/users/login`,
+      {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+              email,
+              password
+          })
+      }
+    );
+
+    const data = (await res.json()) as any;
+
+    return data;
+
+  } catch(error){
+      alertMessage.status = 'error';
+      alertMessage.message = 'Ha habído un problema al iniciar sesión.';
+  }
+    
+}
+
+async function createUser(email:string, password:string){
+  try {
+    const res = await fetch(
+        `${API_URL}/users`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        }
+    );
+
+    const data = (await res.json()) as any;
+
+    return data;
+
+  } catch(error){
+      alertMessage.status = 'error';
+      alertMessage.message = 'Ha habído un problema al iniciar sesión.';
+  }
+    
+}
+---
+
+<Layout title="Finalizar compra">
+  <main>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Crear cuenta"
+      color="color-dark"
+      desc="Accede para ver y guardar todos tus pedidos en un solo lugar, disfrutando de una experiencia de compra personalizada. ¡Tu conveniencia y seguridad son nuestra prioridad!"
+    />
+
+    <div class="container flex-dir-column">
+        <FormLayout>
+          <nav class="secondary-nav mb-4">
+            <li>
+              <a href="/login"> Iniciar sesión </a>
+            </li>
+            <li> 
+              <a href="/registro" class="active"> Registro </a>
+            </li>
+          </nav>
+          <!-- <FormRegister client:load></FormRegister> -->
+
+          <form method="POST" class="form login-form">
+            {alertMessage.message && 
+                <p class={"form-alert " + alertMessage.status}>
+                    {alertMessage?.message}
+                </p>
+            }
+
+            <div class="form-element">
+                <label class={errors.invalidEmail ? 'invalid' : ''}>
+                    <span>Correo electrónico</span>
+                    <input value={email} name="email" required type="email" placeholder="Introduce tu correo electrónico">
+                </label>
+                <!-- {errors.email && <p class="field-error">{errors.email}</p>} -->
+            </div>
+            
+            <div class="form-element">
+                <label class={errors.invalidPassword ? 'invalid' : ''}>
+                    <span>Contraseña</span>
+                    <input value={password} name="password" required type="password" placeholder="Escribe tu nueva contraseña">
+                </label>
+            </div>
+
+            <div class="form-element">
+              <label class={errors.invalidPassword ? 'invalid' : ''}>
+                  <span>Repetir contraseña</span>
+                  <input value={passwordRepeat} name="password-repeat" required type="password" placeholder="Vuelve a escribir tu nueva contraseña">
+              </label>
+            </div>
+        
+            <footer>
+              <button type="submit">
+                  Crear cuenta
+              </button>
+              <div class="flex flex-col gap-2 mt-4">
+                  <p class="mt-2 text[#626262]">¿Ya tienes tu cuenta?</p>
+                  <a href="/login"> Inicia sesión con tu cuenta de El mundo del saquito</a>
+              </div>
+            </footer>
+          </form>
+        </FormLayout>
+    </div>
+  </main>
+</Layout>

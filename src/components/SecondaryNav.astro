@@ -1,0 +1,85 @@
+---
+const currentUrl = Astro.url;
+const pages = [
+  {
+    pathname: "/mi-cuenta",
+    name: "Escritorio"
+  },
+  {
+    pathname: "/mi-cuenta/pedidos",
+    name: "Mis pedidos"
+  },
+  {
+    pathname: "/mi-cuenta/direcciones",
+    name: "Direcciones"
+  },
+  // {
+  //   pathname: "/mi-cuenta/metodos-de-pago",
+  //   name: "Métodos de pago"
+  // },
+  {
+    pathname: "/mi-cuenta/detalles",
+    name: "Detalles de mi cuenta"
+  }
+]
+---
+
+<nav class="secondary-nav">
+  <div class="container secondary-nav-container">
+    {
+      pages.map((page) => (
+        <li>
+          <a 
+          href={page.pathname}
+          class={currentUrl.pathname === page.pathname ? 'active' : ''}
+          >
+            {page.name}
+          </a>
+        </li>
+      ))
+    }
+    </div>
+</nav>
+
+<style is:global>
+    .secondary-nav {
+      padding: 22px 0;
+      flex: auto;
+      width: 100%;
+      border-bottom: 1px solid;
+      margin-bottom: 4rem;
+    }
+
+    .secondary-nav-container {
+      display: flex;
+      gap: 30px;
+    }
+  
+    .secondary-nav li {
+      display: flex;
+      list-style: none;
+    }
+  
+    .secondary-nav li a {
+      width: 100%;
+      color: #000;
+      position: relative;
+      font-size: 0.8em;
+      text-transform: uppercase;
+    }
+
+    .secondary-nav li a.active {
+      color: #000;
+      font-weight: 700;
+    }
+
+    .secondary-nav li a.active::before {
+      content: "";
+      width: 30%;
+      height: 1px;
+      background: #000;
+      position: absolute;
+      left: 0;
+      bottom: -6px;
+    }
+</style>

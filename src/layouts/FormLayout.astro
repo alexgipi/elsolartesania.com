@@ -1,0 +1,86 @@
+<slot />
+<style is:global>
+  .form {
+    max-width: 600px;
+    background: #ffffff;
+    border-radius: 20px;
+  }
+
+  .form-element {
+    margin-bottom: 1.4rem;
+  }
+
+  .form label {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: #2a1448;
+  }
+
+  .form label span {
+    font-weight: 500;
+  }
+
+  .form input {
+    padding: 18px;
+    border-radius: 12px;
+    border: none;
+    background: #ffffff;
+    font-size: 1em;
+    box-shadow: 0 0px 2px #4242424f;
+  }
+
+  .form .invalid {
+    color: #ff0000b5;
+  }
+  .form .invalid input {
+    outline: 2px solid #ff0000b5;
+    background: #ff000012;
+    color: #ff0000b5;
+  }
+
+  .form footer {
+    margin-top: 1.5rem;
+  }
+
+  .form footer button {
+    padding: 18px 40px;
+    background: #2a1448;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    min-width: 200px;
+    cursor: pointer;
+  }
+
+  .form-alert {
+    padding: 8px 18px;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    font-size: 0.82em;
+    display: inline-flex;
+  }
+
+  .form-alert.error {
+    background: #ff0000b5;
+    color: #fff;
+  }
+
+  .form-alert.success {
+    background: #379663;
+    color: #ffffff;
+  }
+
+  .form a {
+    text-decoration: underline;
+    color: #3d1a6c;
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+
+  p.field-error {
+    margin-top: 12px;
+    color: red;
+    font-size: 0.9em;
+  }
+</style>

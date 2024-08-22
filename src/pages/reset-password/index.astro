@@ -1,0 +1,122 @@
+---
+import Jumbotron from "../../components/Jumbotron.astro";
+import FormLayout from "../../layouts/FormLayout.astro";
+import Layout from "../../layouts/Layout.astro";
+import { API_URL } from "../../services/ecommerce";
+
+interface AlertMessage {
+    status: string | null
+    message: string | null
+}
+
+let alertMessage:AlertMessage = {
+    status: null,
+    message: null,
+};
+
+const errors = { invalidEmail: false, invalidPassword: false };
+
+let email:any = '';
+let password:any = '';
+let passwordRepeat:any = '';
+
+const isLoggedIn = Astro.cookies.has('identity');
+console.log({isLoggedIn})
+
+if (isLoggedIn) return Astro.redirect('/');
+
+if (Astro.request.method === "POST") {
+  try {
+    const formData = await Astro.request.formData();
+    email = formData.get("email");
+
+    const forgotPasswordResponse = await forgotPassword(email);
+
+    if(forgotPasswordResponse.ok){
+        alertMessage.status = 'success';
+        alertMessage.message = 'Enlace enviado correctamente';        
+    }else {
+        errors.invalidEmail = true;
+        alertMessage.status = 'error';
+        alertMessage.message = 'No se ha encontrado ninguna cuenta con estos datos.';
+    }
+
+    const hasErrors = Object.values(errors).some(msg => msg)
+
+    if (!hasErrors) {
+      
+      // return Astro.redirect('/');
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+
+async function forgotPassword(email:string){
+  try {
+    const res = await fetch(
+        `${API_URL}/users/forgot-password`,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email })
+        }
+    );
+
+    const data = (await res.json()) as any;
+
+    return data;
+
+  } catch(error){
+      alertMessage.status = 'error';
+      alertMessage.message = 'Ha habído un problema al intentar restablecer la contraseña';
+  }
+    
+}
+---
+
+<Layout title="Finalizar compra">
+  <main>
+    <Jumbotron
+      class="jumbotron--small bg-position-center"
+      title="Restablecer contraseña"
+      color="color-dark"
+      desc="Indícanos tu dirección de correo electrónico o nombre de usuario y te enviaremos un enlace para que puedas volver a acceder a tu cuenta."
+    />
+
+    <div class="container flex-dir-column">
+        <FormLayout>
+
+          <form method="POST" class="form login-form">
+            {alertMessage.message && 
+                <p class={"form-alert " + alertMessage.status}>
+                    {alertMessage?.message}
+                </p>
+            }
+
+            <div class="form-element">
+                <label class={errors.invalidEmail ? 'invalid' : ''}>
+                    <span>Correo electrónico o nombre de usuario</span>
+                    <input value={email} name="email" required type="text">
+                </label>
+                <!-- {errors.email && <p class="field-error">{errors.email}</p>} -->
+            </div>
+        
+            <footer>
+              <button type="submit">
+                  Enviar enlace
+              </button>
+              <div class="flex flex-col gap-2 mt-4">
+                  <p class="mt-2 text[#626262]">¿Ya tienes tu cuenta?</p>
+                  <a href="/login"> Inicia sesión con tu cuenta de El mundo del saquito</a>
+              </div>
+            </footer>
+          </form>
+        </FormLayout>
+    </div>
+  </main>
+</Layout>
