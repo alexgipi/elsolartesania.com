@@ -117,7 +117,7 @@
         </button>
         <div class="flex flex-col gap-2 mt-4">
             <p class="mt-2 text[#626262]">¿Ya tienes tu cuenta?</p>
-            <a href="/login"> Inicia sesión con tu cuenta de El mundo del saquito</a>
+            <a href="/login"> Inicia sesión con tu cuenta de El Sol Artesanía</a>
         </div>
     </footer>
 </form>

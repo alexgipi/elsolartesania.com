@@ -29,7 +29,7 @@
 <section 
 class="jumbotron-hero bg-center bg-no-repeat"
 > 
-    <div class="container py-4 flex items-center gap-16">
+    <div class="container py-4 flex flex-col gap-16 md:flex-row">
         <div class="flex flex-col flex-1 gap-6">
             <h1 class="jumbotron-title text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-5xl">
                 {product.name}
@@ -73,12 +73,18 @@ class="jumbotron-hero bg-center bg-no-repeat"
         background-color: #ffffff;
     }
 
-    .jumbotron-content p {
-        font-size: 17px;
-        opacity: 0.85;
-        color: #000;
-        max-width: 740px;
-        text-wrap: pretty;
+    :global(.jumbotron-content) {
+        & p {
+            font-size: 16px;
+            color: #000;
+            max-width: 740px;
+            text-wrap: pretty;
+            margin-bottom: 1rem;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
     }
 
     .jumbotron-hero.with-bg {
@@ -110,7 +116,23 @@ class="jumbotron-hero bg-center bg-no-repeat"
         color: #000;
         text-transform: uppercase;
         font-weight: 900;
-        font-size: 4rem;
+        font-size: 3.8rem;
+
+        @media(max-width: 1320px){
+            font-size: 3.4rem;
+        }
+
+        @media(max-width: 1260px){
+            font-size: 3rem;
+        }
+
+        @media(max-width: 1140px){
+            font-size: 2.8rem;
+        }
+
+        @media(max-width: 1050px){
+            font-size: 2.5rem;
+        }
     }
 
 

@@ -112,7 +112,7 @@
     transition: all 0.3s ease;
   }
 
-  .btn-add-to-cart:hover {
+  .btn-add-to-cart:hover:not(.bg-green) {
       background: #000;
       color: #fff;
       border-color: transparent;

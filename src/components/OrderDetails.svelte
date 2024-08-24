@@ -115,7 +115,7 @@
           <tr>
             <td>
               <a
-                href="https://elmundodelsaquito.es/producto/saco-de-semillas-catrinas/?attribute_pa_flor-y-esencia=lavanda"
+                href="/saco-de-semillas-catrinas/?attribute_pa_flor-y-esencia=lavanda"
                 >
                 {orderItem.name}
               </a>
@@ -182,6 +182,10 @@
 </section>
 
 <style>
+
+.order-details {
+  margin-top: 4rem;
+}
 h2 {
   color: #000000;
     font-size: 1.5em;

@@ -1,6 +1,6 @@
 ---
 const currentUrl = Astro.url;
-const pages = [
+const default_pages = [
   {
     pathname: "/mi-cuenta",
     name: "Escritorio"
@@ -22,12 +22,18 @@ const pages = [
     name: "Detalles de mi cuenta"
   }
 ]
+
+let { pages } = Astro.props;
+
+if(!pages){
+  pages = default_pages;
+}
 ---
 
 <nav class="secondary-nav">
   <div class="container secondary-nav-container">
     {
-      pages.map((page) => (
+      pages.map((page:any) => (
         <li>
           <a 
           href={page.pathname}

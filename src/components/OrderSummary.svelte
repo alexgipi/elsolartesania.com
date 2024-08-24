@@ -1,6 +1,6 @@
 <script lang="ts">
   import { nanoid } from "nanoid";
-  import { isCartOpen, cartItems, totalItems, subtotal, addCartItem, removeCartItem, minForFreeShipping, shippingCost } from "../cartStore";
+  import { isCartOpen, cartItems, totalItems, subtotal, addCartItem, removeCartItem, minForFreeShipping, shippingCost, shippingTypes } from "../cartStore";
   import { formatCurrency } from "../utils";
   import { loadStripe } from "@stripe/stripe-js";
   import { API_URL } from "../services/ecommerce";
@@ -15,7 +15,7 @@
   let email: string;
   let address: object;
   let name: string;
-  let shippingType: string = "Correos Express (48h - 72h)";
+  // let shippingType: string = "Correos Express (48h - 72h)";
 
   // Fetches a payment intent and captures the client secret
   async function initialize() {
@@ -150,10 +150,16 @@
     messageContainer.textContent = error.message;
   };
 
+  let shippingTypeSelected: any;
   export async function handleSubmit(event: any) {
     // We don't want to let default form submission happen here,
     // which would refresh the page.
     event.preventDefault();
+
+    let el: any = document.querySelector('input[name="shipping-type"]:checked');
+    console.log(el.value);
+    shippingTypeSelected = shippingTypes.find(shippingType => shippingType.value === el.value);
+    console.log(shippingTypeSelected);
 
     // Trigger form validation and wallet collection
     const { error: submitError } = await elements.submit();
@@ -194,6 +200,7 @@
       
     }
 
+    let validFreeShipping = $minForFreeShipping - $subtotal <= 0
     // Create the PaymentIntent
     const res = await fetch(`${API_URL}/create-confirm-intent`, {
       method: "POST",
@@ -206,10 +213,10 @@
         email,
         customerName: name,
         address,
-        shippingCost: $shippingCost,
-        shippingType,
+        shippingCost: shippingTypeSelected.price,
+        shippingType: shippingTypeSelected.name,
         subtotal: $subtotal,
-        total: $minForFreeShipping - $subtotal <= 0 ? $subtotal : $subtotal + $shippingCost,
+        total: validFreeShipping ? $subtotal : $subtotal + $shippingCost,
       }),
     });
 

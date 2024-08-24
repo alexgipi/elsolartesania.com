@@ -18,6 +18,35 @@ export const subtotal = atom(0);
 export const minForFreeShipping = atom(45);
 export const shippingCost = atom(8.5);
 
+export let shippingTypes = [
+  {
+      value: 'correos-express',
+      name: 'Correos Express',
+      label: 'Correos Express (48h - 72h)',
+      price: 8.5,
+      freeShipping: false,
+      default: true,
+  },
+  {
+      value: 'dhl',
+      name: 'DHL',
+      label: 'DHL (3 - 5 días)',
+      price: 6.5,
+      freeShipping: false,
+      default: false,
+  },
+  {
+      value: 'free-shipping',
+      name: 'Envío gratuito',
+      label: 'Envío gratuito',
+      price: 0,
+      freeShipping: true,
+      minForEnable: 45,
+      default: false,
+  },
+
+];
+
 
 type ItemDisplayInfo = Pick<CartItem, 'id' | 'name' | 'imageSrc' | 'price' | 'selectedAttributes'>;
 

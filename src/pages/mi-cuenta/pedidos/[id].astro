@@ -2,7 +2,7 @@
 import Jumbotron from "../../../components/Jumbotron.astro";
 import Layout from "../../../layouts/Layout.astro";
 import SecondaryNav from "../../../components/SecondaryNav.astro";
-import { formatCurrency, formatDate } from "../../../utils";
+import { formatCurrency, formatDate, slugify } from "../../../utils";
 import { ORDER_STATUS_VALUES } from "../../../consts"
 import { API_URL } from "../../../services/ecommerce";
 
@@ -54,7 +54,7 @@ async function getOrder(orderNumber: string | undefined) {
         backPath="/mi-cuenta/pedidos"
         title={"Pedido #" + id}
         color="color-dark"
-        desc={`El pedido #${order.orderNumber} se realizó el ${formatDate(order.createdAt)} y está actualmente '${ORDER_STATUS_VALUES[order?.status]?.es}'.`}
+        desc={`El pedido #${order.orderNumber} se realizó el ${formatDate(order?.createdAt || '')} y está actualmente '${ORDER_STATUS_VALUES[order?.status]?.es}'.`}
       />
     }
 
@@ -82,7 +82,7 @@ async function getOrder(orderNumber: string | undefined) {
               orderItems.map((item:any) => (
                 <tr class="woocommerce-table__line-item order_item">
                   <td class="woocommerce-table__product-name product-name">
-                    <a href="https://elmundodelsaquito.es/producto/antifaz-relajante-notas-musicales/">
+                    <a href={`/${slugify(item.name)}`}>
                      {item.name}
                     </a>
                     <strong class="product-quantity">× {item.quantity}</strong>
@@ -147,55 +147,57 @@ async function getOrder(orderNumber: string | undefined) {
   .my-account-content {
     padding: 20px;
     border-radius: 4px;
-    color: #6e6e6e;
+    color: #000;
     font-size: 0.9em;
     width: 100%;
+    margin-bottom: 4rem;
   }
 
   table {
-    width: 100%;
-    text-align: left;
-    border-spacing: 0;
-    border-radius: 9px;
-    overflow: hidden;
-  }
+      width: 100%;
+      text-align: left;
+      border-spacing: 0;
+      overflow: hidden;
+      outline: 1px solid #000;
+    }
 
-  table:not(.has-background) th {
-    background-color: #fafafa;
-  }
+    table:not( .has-background ) th {
+      background-color: #fff;
+    }
 
-  table:not(.has-background) tbody td {
-    background-color: #fdfdfd;
-  }
+    table:not( .has-background ) tbody td {
+        background-color: #fff;
+    }
 
-  table:not(.has-background) tbody tr:nth-child(2n) td,
-  fieldset,
-  fieldset legend {
-    background-color: #fbfbfb;
-  }
+    table:not( .has-background ) tbody tr:nth-child(2n) td, fieldset, fieldset legend {
+      background-color: #fff;
+    }
 
-  table thead th {
-    vertical-align: middle;
-    font-weight: 600;
-  }
+    table thead th {
+      vertical-align: middle;
+      font-weight: 600;
+    }
 
-  table td,
-  table th {
-    padding: 1.8em 1.6em;
-    font-size: 0.96em;
-  }
+    table td, table th {
+      padding: 1.8em 1.6em;
+      font-size: 0.96em;
+    }
 
-  th {
-    color: #2a1448;
-  }
+    th {
+      color: #000;
+    }
 
-  table .button {
-    padding: 10px 20px;
-    color: #000;
-    background: #eee;
-  }
+    table .button {
+      padding: 10px 20px;
+      color: #000;
+      background: #eee;
+    }
 
-  a {
-    color: #3d1a6c;
-  }
+    a {
+      color: #000;
+    }
+
+    tbody tr {
+        border-top: 1px solid;
+    }
 </style>

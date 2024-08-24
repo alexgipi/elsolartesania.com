@@ -189,7 +189,7 @@
 
   .variable-items-wrapper {
     display: grid;
-    grid-template-columns: repeat(9, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
     gap: 14px;
     width: 100%;
   }
@@ -199,7 +199,7 @@
     overflow: hidden;
     cursor: pointer;
     outline: 2px solid #c9c9c987;
-    padding: 4px;
+    padding: 2px;
 
     &.active {
       outline: 2px solid #111;

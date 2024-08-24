@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { isCartOpen, cartItems, totalItems, subtotal, addCartItem, removeCartItem, minForFreeShipping, shippingCost } from "../../cartStore";
+    import { isCartOpen, cartItems, totalItems, subtotal, addCartItem, removeCartItem, minForFreeShipping, shippingCost, shippingTypes } from "../../cartStore";
     import { formatCurrency } from "../../utils";
     import OrderSummary from "../OrderSummary.svelte";
     import SvelteQuantity from "./SvelteQuantity.svelte";
@@ -24,27 +24,10 @@
         removeCartItem(itemKey)
     }
 
-    let shippingTypes = [
-        {
-            value: 'correos-express',
-            name: 'Correos Express',
-            label: 'Correos Express (48h - 72h)',
-            price: 8.5,
-            freeShipping: false,
-        },
-        {
-            value: 'free-shipping',
-            name: 'Envío gratuito',
-            label: 'Envío gratuito',
-            price: 0,
-            freeShipping: true,
-            minForEnable: 45,
-        },
+    
 
-    ]
-
-    let defaultShippingType = 'correos-express';
-    let shippingTypeSelected =  defaultShippingType;
+    let defaultShippingType = shippingTypes.find(shippingType => shippingType.default);
+    let selectedShippingType;
 
     let handleSubmitChild:any;
 
@@ -57,6 +40,14 @@
     function backHandler() {
         showPaymentForm = false;
     }
+
+    function finishPurchaseHandler() {
+        showPaymentForm = true;
+    }
+
+    function handleShippingTypeChange(event:any) {
+        selectedShippingType = shippingTypes.find(shippingType => shippingType.value === event.target.value);
+    }   
 </script>
 
 <div 
@@ -92,20 +83,26 @@ on:click={toggleCart}>
                 <input disabled={$minForFreeShipping - $subtotal <= 0} name="shipping-type" value="dhl" type="radio" checked={shippingTypeSelected === 'dhl'}>
                 <span>DHL - 6,50€ <small>(Entre 4 y 7 días)</small></span>
             </label> -->
-
+            
             {#each shippingTypes as shippingType}
                 <label class="cart-shipping-option" class:disabled={shippingType.freeShipping ? $minForFreeShipping - $subtotal > 0 : $minForFreeShipping - $subtotal <= 0}>
                     <input 
-                    checked={$minForFreeShipping - $subtotal <= 0 && shippingType.freeShipping} 
+                    on:change={handleShippingTypeChange}
+                    checked={shippingType.freeShipping && $subtotal >= $minForFreeShipping ? true  : shippingType.default}
                     disabled={shippingType.freeShipping ? $minForFreeShipping - $subtotal > 0 : $minForFreeShipping - $subtotal <= 0} 
                     name="shipping-type" 
                     value={shippingType.value} 
-                    type="radio">
+                    type="radio"
+                    >
 
                     <span>
                         {shippingType.name}
                         {#if !shippingType.freeShipping}
                         - {formatCurrency(shippingType.price)}
+                        {/if}
+
+                        {#if !shippingType.freeShipping}
+                        <small>(48h - 72h)</small>
                         {/if}
 
                         {#if $minForFreeShipping - $subtotal > 0 && shippingType.freeShipping}
@@ -158,7 +155,7 @@ on:click={toggleCart}>
         {#if showPaymentForm}
             <button type="submit" class="drawer-btn cart_drawer__checkout" on:click={submit}>Realizar pago - {formatCurrency( $minForFreeShipping - $subtotal <= 0 ? $subtotal : $subtotal + $shippingCost)}</button>
         {:else}
-            <button type="button" class="drawer-btn cart_drawer__checkout" on:click={() => showPaymentForm = true}>Finalizar compra</button>
+            <button disabled={$subtotal === 0} type="button" class="drawer-btn cart_drawer__checkout" on:click={finishPurchaseHandler}>Finalizar compra</button>
         {/if}
         <button type="button" class="drawer-btn cart_drawer__continue">Continuar comprando</button>
     </footer>
@@ -330,6 +327,11 @@ on:click={toggleCart}>
             background: #000;
             color: #fff;
             border-color: transparent;
+
+            &:disabled {
+                cursor: not-allowed;
+                opacity: 0.5;
+            }
         }
 
         & .cart_drawer__continue {
