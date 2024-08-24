@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: 18.17.1
     - name: Install dependencies
-      run: npm install -f --no-audit --no-fund --no-optional
+      run: npm install -f --no-audit --no-fund
     - name: Create .env file
       run: |
         echo "PUBLIC_STRIPE_PK=${{ secrets.PUBLIC_STRIPE_PK }}" >> .env
