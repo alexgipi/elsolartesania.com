@@ -59,6 +59,7 @@ if(!pages){
     .secondary-nav-container {
       display: flex;
       gap: 30px;
+
     }
   
     .secondary-nav li {
@@ -87,5 +88,16 @@ if(!pages){
       position: absolute;
       left: 0;
       bottom: -6px;
+    }
+
+    @media(max-width: 680px){
+      .secondary-nav-container {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .secondary-nav li a.active:before {
+        content: none;
+      }
     }
 </style>
