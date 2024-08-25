@@ -93,10 +93,13 @@
 
   .circle-add-to-cart-button {
     padding: 1.5rem;
-    background: #ffffff;
+    background: #fff;
     color: #000;
-    border: 1px solid;
-    transition: backgrond 0.3s ease, color 0.3s ease;
+    outline: 1px solid;
+    transition: backgrond .3s ease, color .3s ease;
+    width: 100%;
+    justify-content: center;
+    display: flex;
   }
 
   .btn-add-to-cart {
