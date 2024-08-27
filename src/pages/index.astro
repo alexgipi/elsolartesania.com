@@ -3,7 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import CategoryGrid from "../components/CategoryGrid.astro";
 import ProductGrid from "../components/ProductGrid.astro";
 
-import { API_URL, getCategoryProducts } from "../services/ecommerce";
+import { API_URL, getCategoryBySlug, getCategoryProducts } from "../services/ecommerce";
 import Slider from "../components/ui/Slider.astro";
 const gridLimit:number = 4;
 
@@ -74,9 +74,11 @@ async function getProducts(category:string, limit:number) {
 
       {sections?.map(async (section:any) => {
         let products = [];
+        let category = null;
 
         if (section.get_docs.collectionType === "products") {
           products = await getProducts(section?.get_docs?.['product-categories'], section?.get_docs?.limit || gridLimit);
+          category = await getCategoryBySlug(section?.get_docs?.['product-categories']|| '');
         }
 
         return (
@@ -121,7 +123,7 @@ async function getProducts(category:string, limit:number) {
               }
 
               { section.get_docs.collectionType === "products" &&
-                <ProductGrid products={products}></ProductGrid>
+                <ProductGrid category={category} class={'product-grid--category-' + section?.get_docs?.['product-categories']} products={products}></ProductGrid>
               }
             </div>
           </section>

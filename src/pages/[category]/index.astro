@@ -21,7 +21,7 @@ const catProducts = await getCategoryProducts(categorySlug || '')
 
     <div class="container flex-dir-column">
 	    <section>
-        <ProductGrid products={catProducts}></ProductGrid>
+        <ProductGrid category={category} class={'product-grid--category-' + categorySlug} products={catProducts}></ProductGrid>
       </section>
     </div>
 </Layout>

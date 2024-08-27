@@ -11,7 +11,10 @@ const {class: className, product } = Astro.props;
 
 ---
 
-<a href=`/${product.categories[0].slug}/${product.slug}` class={"product-card flex flex-col bg-white overflow-hidden dark:bg-gray-800 dark:border-gray-700 " + className || ''}>
+<a 
+href=`/${product.categories[0].slug}/${product.slug}` 
+id={'product-card-' + product._id}
+class={"product-card flex flex-col bg-white overflow-hidden dark:bg-gray-800 dark:border-gray-700 " + className || ''}>
     
     
     <picture class="product-card-picture flex rounded-xl rounded-b-none overflow-hidden">
@@ -164,6 +167,11 @@ const {class: className, product } = Astro.props;
         img {
             transform: scale(1.1);
         }
+    }
+
+    #product-card-66777d88095d314bb02b03bb img, 
+    #product-card-66777dfe095d314bb02b0540 img {
+        padding: 1.5rem;
     }
 </style>
 

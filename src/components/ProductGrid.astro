@@ -5,13 +5,14 @@ import ProductCard from "./ui/productCard.astro";
 
 interface Props {
   class?:string,
-  products: any[];
+  products: any[],
+  category: any
 }
-const {class: className, products } = Astro.props;
+const {class: className, products, category } = Astro.props;
 
 ---
 
-<div class:list={["product-grid", className]}>
+<div class:list={["product-grid", className]} id={`product-grid-${category?._id}`}>
     {
       products?.map((product: any, index:number) => (
         <ProductCard product={product}></ProductCard>
