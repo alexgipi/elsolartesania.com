@@ -127,6 +127,12 @@ const { title } = Astro.props;
       /* transition: width 0.3s ease; */
     }
 
+    .layout__header {
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
     .container {
       max-width: 1360px;
       margin: 0 auto;
@@ -265,7 +271,7 @@ const { title } = Astro.props;
       left: 0;
       bottom: 0;
       width: 100%;
-      padding: 24px;
+      padding: 2.5rem 1.25rem;
       display: flex;
       flex-direction: column;
       padding-top: 0;
@@ -281,6 +287,7 @@ const { title } = Astro.props;
 
     .category-card picture {
       height: 290px;
+      margin-top: 10px;
     }
 
     .category-card.with-gradient::before {
@@ -294,7 +301,7 @@ const { title } = Astro.props;
     }
 
     .category-card {
-      min-height: 370px;
+      min-height: 405px;
       border-radius: 0;
 
       /* &:hover img {
@@ -307,6 +314,7 @@ const { title } = Astro.props;
       z-index: 1;
       transition: all 0.6s ease;
       height: 100%;
+      filter: drop-shadow(-7px 18px 8px rgba(0, 0, 0, 0.35));
     }
 
     #cat-zapatillas-termicas img {
@@ -324,11 +332,12 @@ const { title } = Astro.props;
     } */
 
     .hover-img-brightness img {
-      transition: filter 0.6s ease;
+      transition: filter,scale 0.6s ease
     }
 
     .hover-img-brightness:hover img {
-      filter: brightness(1.15);
+      filter: brightness(1.15) drop-shadow(-7px 18px 8px rgba(0,0,0,0.35));
+      scale: 1.05;
     }
 
     .hover-img-brightness.with-gradient:hover::before {
