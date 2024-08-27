@@ -28,22 +28,24 @@ async function categoryProductsCount(categorySlug:string){
         id={'cat-'+category.slug}
         style="background:#eee;"
       >
-        <picture>
-          <img
-            width="302"
-            height="408"
-            class={objectFit || "object-fit-contain"}
-            alt={category.name}
-            src={UPLOADS_URL + category.images[0]?.file}
-          />
-        </picture>
-
-        <div class="card-body">
-          <h4 class="card-title text-align-center">{category.name}</h4>
-
-          <span class="card-subtitle text-align-center color-white text-sm font-weight-semibold mb-0">
-            Ver {category.totalProducts} productos &gt;
-          </span>
+        <div 
+        class="card-content your-element"
+        >
+          <picture>
+            <img
+              width="302"
+              height="408"
+              class={objectFit || "object-fit-contain"}
+              alt={category.name}
+              src={UPLOADS_URL + category.images[0]?.file}
+            />
+          </picture>
+          <div class="card-body">
+            <h4 class="card-title text-align-center">{category.name}</h4>
+            <span class="card-subtitle text-align-center color-white text-sm font-weight-semibold mb-0">
+              Ver {category.totalProducts} productos &gt;
+            </span>
+          </div>
         </div>
       </a>
     ))
@@ -59,4 +61,33 @@ async function categoryProductsCount(categorySlug:string){
   }
 </div>
 
-<style></style>
+<script>
+  import VanillaTilt from 'vanilla-tilt';
+  
+  function initTilt(){
+    const els = document.querySelectorAll(".your-element");
+
+    els.forEach(el => {
+      const tilt = new VanillaTilt(el as any, {
+        max: 10,
+        speed: 500,
+        perspective: 800,
+        scale: 1.05,
+      });
+      
+    });
+
+  }
+
+  document.addEventListener("DOMContentLoaded", initTilt);
+
+  document.addEventListener('astro:after-swap', (e) => {
+    initTilt();
+  })
+</script>
+
+<style>
+  .card-content {
+    width: 100%;
+  }
+</style>

@@ -13,10 +13,10 @@ const {class: className, product } = Astro.props;
 
 <a href=`/${product.categories[0].slug}/${product.slug}` class={"product-card flex flex-col bg-white overflow-hidden dark:bg-gray-800 dark:border-gray-700 " + className || ''}>
     
-    <picture  class="flex rounded-xl rounded-b-none overflow-hidden">
+    
+    <picture class="product-card-picture flex rounded-xl rounded-b-none overflow-hidden">
         <img width="435" height="326" transition:name=`${product.slug}` src={UPLOADS_URL + product.images[0]?.file} alt={"Imagen del producto " + product.name}>
     </picture>
-
     <div class="px-6 flex-auto flex flex-col justify-between">
         <div>
             <div class="flex justify-center gap-10">
@@ -85,6 +85,7 @@ const {class: className, product } = Astro.props;
             }
         </div> -->
     </div>
+    
 
     <footer class="product-card-footer">
         <div class="product-card-footer-cell">
@@ -116,6 +117,7 @@ const {class: className, product } = Astro.props;
         img {
             object-fit: contain;
             height: 100%;
+            transition: transform 0.4s ease;
         }
     }
 
@@ -153,8 +155,38 @@ const {class: className, product } = Astro.props;
 </style>
 
 <style is:global>
-    .product-card:hover .circle-add-to-cart-button {
-        background: #fbf0ec;
-        color: #ef5726;
+    .product-card:hover {
+        .circle-add-to-cart-button {
+            background: #fbf0ec;
+            color: #ef5726;
+        }
+
+        img {
+            transform: scale(1.1);
+        }
     }
 </style>
+
+<script>
+    import VanillaTilt from 'vanilla-tilt';
+    
+    function initTilt(){
+      const els = document.querySelectorAll(".product-card-picture");
+  
+      els.forEach(el => {
+        const tilt = new VanillaTilt(el as any, {
+          max: 15,
+          speed: 500,
+          perspective: 800,
+        });
+        
+      });
+  
+    }
+  
+    document.addEventListener("DOMContentLoaded", initTilt);
+  
+    document.addEventListener('astro:after-swap', (e) => {
+      initTilt();
+    })
+  </script>
