@@ -127,10 +127,12 @@ const { title } = Astro.props;
       /* transition: width 0.3s ease; */
     }
 
-    .layout__header {
-      position: sticky;
-      top: 0;
-      z-index: 999;
+    @media(min-width: 551px){
+      .layout__header {
+        position: sticky;
+        top: 0;
+        z-index: 999;
+      }
     }
 
     .container {
