@@ -126,7 +126,7 @@
                                         class="variable-item-image"
                                         aria-hidden="true"
                                         alt="Cajita 1"
-                                        src={UPLOADS_URL + option?.['attribute-option-image']?.file}
+                                        src={UPLOADS_URL + 'thumbnail/' + option?.['attribute-option-image']?.file}
                                         width="200"
                                         height="200"
                                     />
@@ -184,14 +184,46 @@
 
 <style>
   :root {
-    --variable-item-radius: 0;
+    --variable-item-radius: 100%;
   }
 
   .variable-items-wrapper {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(45px, 1fr));
-    gap: 14px;
+    gap: 12px;
     width: 100%;
+    grid-template-columns: repeat(5,1fr);
+
+    @media(min-width: 406px) {
+      grid-template-columns: repeat(6,1fr);
+    }
+
+    @media(min-width: 498px) {
+      grid-template-columns: repeat(7,1fr);
+    }
+
+    @media(min-width: 585px) {
+      grid-template-columns: repeat(8,1fr);
+    }
+
+    @media(min-width: 710px) {
+      grid-template-columns: repeat(9,1fr);
+    }
+
+    @media(min-width: 768px) {
+      grid-template-columns: repeat(6,1fr);
+    }
+
+    @media(min-width: 920px) {
+      grid-template-columns: repeat(7,1fr);
+    }
+
+    @media(min-width: 1182px) {
+      grid-template-columns: repeat(8,1fr);
+    }
+
+    @media(min-width: 1329px) {
+      grid-template-columns: repeat(9,1fr);
+    }
   }
 
   .variable-item.image-variable-item {
@@ -209,7 +241,7 @@
   .variable-item-image {
     border-radius: var(--variable-item-radius);
     aspect-ratio: 1;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .variable-item-color {
