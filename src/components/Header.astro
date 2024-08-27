@@ -47,7 +47,7 @@ async function getMainNav(){
 
 <header>
   <div class="container">
-    <a href="/">
+    <a href="/" class="flex-1 logo-link">
       <img width="210" height="50" src="https://elsolartesania.com/wp-content/uploads/2018/04/cropped-cropped-logo-el-sol.png" class="custom-logo" alt="El Sol – Tu tienda online de artesanía" decoding="async" fetchpriority="high" srcset="https://elsolartesania.com/wp-content/uploads/2018/04/cropped-cropped-logo-el-sol.png 550w, https://elsolartesania.com/wp-content/uploads/2018/04/cropped-cropped-logo-el-sol-500x127.png 500w, https://elsolartesania.com/wp-content/uploads/2018/04/cropped-cropped-logo-el-sol-416x106.png 416w" sizes="(max-width: 550px) 100vw, 550px">
     </a>
     
@@ -81,7 +81,7 @@ async function getMainNav(){
       >
       <input placeholder="Buscar productos..." />
     </div> -->
-    <div class="header__right">
+    <div class="header__right flex-1 justify-end">
 
       <ToggleCart client:load/>
 
@@ -274,8 +274,7 @@ async function getMainNav(){
     gap: 8px;
     font-size: 0.9em;
     padding: 10px;
-    border: 1px solid #eee;
-    border-radius: 5px;
+    border: 1px solid #000000;
 
     svg {
       width: 20px;
@@ -305,11 +304,16 @@ async function getMainNav(){
     }
 
     .header__right {
-        width: 100%;
-        justify-content: space-between;
+      display: none;
     }
   }
 
+
+  @media(max-width:400px){
+    .custom-logo {
+
+    }
+  }
 
   
 
