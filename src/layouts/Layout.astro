@@ -204,6 +204,25 @@ const { title } = Astro.props;
       width: 100%;
       padding: 4rem;
       outline: 1px solid #000;
+
+      @media(max-width: 560px) {
+        padding: 2rem 1.75rem;  
+
+        & .d-block-title {
+          font-size: 1.2rem;
+          text-wrap: balance;
+        }
+
+        & p {
+          font-size: 0.86rem;
+          text-wrap: pretty;
+        }
+
+        & .d-block-subtitle {
+          font-size: 0.86rem;
+          text-wrap: pretty;
+        }
+      }
     }
 
     .d-block.text-center {
