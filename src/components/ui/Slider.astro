@@ -22,7 +22,7 @@ console.log(slider)
                 <video src={`${UPLOADS_URL}${item.bgImage?.file}`} class="jumbotron-hero__bg-video" autoplay muted loop></video>
             }
             
-            <div class="container py-4 flex">
+            <div class="container py-4 flex items-center">
                 <div class="flex flex-col">
                     <h1 class="jumbotron-title mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl">
                         {item.title}
@@ -48,7 +48,7 @@ console.log(slider)
                         <span></span>
                         <span></span>
                     </div>
-                    <div class="slider-controls">
+                    {/* <div class="slider-controls">
                     
                         <button class="slider-controls-btn prev">
                             <svg class="slider-controls-btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"></path></svg>
@@ -56,7 +56,7 @@ console.log(slider)
                         <button class="slider-controls-btn next">
                             <svg class="slider-controls-btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"></path></svg>
                         </button>
-                    </div>
+                    </div> */}
                 </div>
                 
                 <div class="jumbotron-item-featured-block">
@@ -200,6 +200,11 @@ console.log(slider)
         display: flex;
         translate: -24px -15px;
         position: relative;
+        width: 44%;
+
+        @media(max-width: 960px){
+            display: none;
+        }
     }
 
     .item-featured-principal-image {
