@@ -62,8 +62,13 @@ console.log(Astro.cookies.get("Hola"));
     }
 
     .addresses {
-      display: flex;
-      gap: 18px;
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: 1fr 1fr;
+
+      @media(max-width: 900px){
+        grid-template-columns: 1fr ;
+      }
     }
 
     .address-element {
@@ -85,10 +90,10 @@ console.log(Astro.cookies.get("Hola"));
     }
 
     .address-element-title {
-      font-size: 1.5em;
+      font-size: 1.25em;
       margin: 0 0 10px;
       color: #000;
-      font-weight: 500;
+      font-weight: 600;
       text-transform: uppercase;
     }
 
