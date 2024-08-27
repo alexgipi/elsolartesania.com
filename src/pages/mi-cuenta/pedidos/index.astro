@@ -60,15 +60,18 @@ async function userOrders(){
     <SecondaryNav></SecondaryNav>
     
     <div class="my-account container align-it-flex-start">
-      <div class="my-account-content padding-0">
+      <div class="my-account-content table-container padding-0">
 
         <table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
           <thead>
             <tr>
                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><span class="nobr">Pedido</span></th>
-                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date"><span class="nobr">Fecha</span></th>
+                
                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status"><span class="nobr">Estado</span></th>
                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-total"><span class="nobr">Total</span></th>
+                
+                
+                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date"><span class="nobr">Fecha</span></th>
                 <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions"><span class="nobr">Acciones</span></th>
             </tr>
           </thead>
@@ -83,21 +86,27 @@ async function userOrders(){
                     </a>
                   </td>
 
-                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date" data-title="Fecha">
-                    <time datetime={order.createdAt}>{formatDate(order.createdAt)}</time>
-                  </td>
-
                   <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status" data-title="Estado">
                     { ORDER_STATUS_VALUES[order.status]?.['es'] }
                   </td>
-
+                  
                   <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total" data-title="Total">
-                    <span class="woocommerce-Price-amount amount">
-                      {formatCurrency(order.total)}
-                    </span> 
-                      
+                    
+                    <a href={"/mi-cuenta/pedidos/" + order.orderNumber}>
+                      <span class="woocommerce-Price-amount amount">
+                        {formatCurrency(order.total)}
+                      </span> 
+                        
                       para {Object.keys(order.items).length} artículos
+                    </a>
+                    
                   </td>
+
+                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date" data-title="Fecha">
+                    <time datetime={order.createdAt}>{formatDate(order.createdAt)}</time>
+                  </td>                 
+
+
                   <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions" data-title="Acciones">
                     <a href={"/mi-cuenta/pedidos/" + order.orderNumber} class="woocommerce-button button view">Ver</a>
                   </td>
@@ -120,7 +129,6 @@ async function userOrders(){
     }
   
     .my-account-content {
-      border-radius: 4px;
       color: #000;
       font-size: 0.9em;
       width: 100%;
@@ -155,6 +163,7 @@ async function userOrders(){
     table td, table th {
       padding: 1.8em 1.6em;
       font-size: 0.96em;
+      white-space: nowrap;
     }
 
     th {
@@ -173,6 +182,16 @@ async function userOrders(){
 
     tbody tr {
         border-top: 1px solid;
+    }
+
+    .table-container {
+      max-width: 100%;
+      overflow-x: auto;
+      outline: 1px solid;
+    }
+
+    table a {
+      text-decoration: underline;
     }
 </style>
   
