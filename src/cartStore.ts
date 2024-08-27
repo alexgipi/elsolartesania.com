@@ -17,6 +17,7 @@ export const totalItems = atom(0);
 export const subtotal = atom(0);
 export const minForFreeShipping = atom(45);
 export const shippingCost = atom(8.5);
+export const clickContinueShoppingCount = atom(0);
 
 export let shippingTypes = [
   {
