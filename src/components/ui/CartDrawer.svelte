@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { isCartOpen, cartItems, totalItems, subtotal, addCartItem, removeCartItem, minForFreeShipping, shippingCost, shippingTypes } from "../../cartStore";
+    import { isCartOpen, cartItems, totalItems, subtotal, addCartItem, removeCartItem, minForFreeShipping, shippingCost, shippingTypes, clickContinueShoppingCount } from "../../cartStore";
     import { formatCurrency } from "../../utils";
     import OrderSummary from "../OrderSummary.svelte";
     import SvelteQuantity from "./SvelteQuantity.svelte";
@@ -47,7 +47,11 @@
 
     function handleShippingTypeChange(event:any) {
         selectedShippingType = shippingTypes.find(shippingType => shippingType.value === event.target.value);
-    }   
+    }
+
+    function continueShoppingHandler() {
+        clickContinueShoppingCount.set($clickContinueShoppingCount + 1);
+    }
 </script>
 
 <div 
@@ -73,7 +77,11 @@ on:click={toggleCart}>
         <p class="cart-drawer__subtotal">
             <strong>Subtotal:</strong> {formatCurrency($subtotal)}
         </p>
-        <button on:click={toggleCart} type="button" class="close-button" data-astro-source-loc="13:103"> <span class="absolute -inset-0.5" data-astro-source-loc="14:24"></span> <span class="sr-only" data-astro-source-loc="15:45">Close panel</span> <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-astro-source-loc="16:136"> <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" data-astro-source-loc="17:26"></path> </svg> </button>
+        <button on:click={toggleCart} type="button" class="close-button">
+            <span class="absolute -inset-0.5"></span>
+            <span class="sr-only">Close panel</span> 
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true" data-astro-source-loc="16:136"> <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" data-astro-source-loc="17:26"></path></svg>
+        </button>
     </header>
     <div class="cart-drawer__body">
         <div class="cart-shipping-details">
@@ -153,11 +161,30 @@ on:click={toggleCart}>
         
     <footer class="cart-drawer__footer">
         {#if showPaymentForm}
-            <button type="submit" class="drawer-btn cart_drawer__checkout" on:click={submit}>Realizar pago - {formatCurrency( $minForFreeShipping - $subtotal <= 0 ? $subtotal : $subtotal + $shippingCost)}</button>
+            <button 
+            type="submit" 
+            class="drawer-btn cart_drawer__checkout" 
+            on:click={submit}
+            >
+                Realizar pago - {formatCurrency( $minForFreeShipping - $subtotal <= 0 ? $subtotal : $subtotal + $shippingCost)}
+            </button>
         {:else}
-            <button disabled={$subtotal === 0} type="button" class="drawer-btn cart_drawer__checkout" on:click={finishPurchaseHandler}>Finalizar compra</button>
+            <button 
+            disabled={$subtotal === 0} 
+            type="button" 
+            class="drawer-btn cart_drawer__checkout" 
+            on:click={finishPurchaseHandler}
+            >
+                Finalizar compra
+            </button>
         {/if}
-        <button type="button" class="drawer-btn cart_drawer__continue">Continuar comprando</button>
+        <button 
+        on:click={continueShoppingHandler} 
+        type="button" 
+        class="drawer-btn cart_drawer__continue"
+        >
+            Continuar comprando - {$clickContinueShoppingCount}
+        </button>
     </footer>
 </div>
 
@@ -287,7 +314,6 @@ on:click={toggleCart}>
         width: calc(100% - 1.5rem - 100px);
         display: flex;
         flex-direction: column;
-        padding-top: 6px;
     }
 
     .cart-drawer__item-title {
@@ -295,6 +321,7 @@ on:click={toggleCart}>
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-size: 15px;
     }
 
     .cart-drawer__item-subtitle {
