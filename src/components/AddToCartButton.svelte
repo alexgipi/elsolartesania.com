@@ -110,9 +110,11 @@
     min-width: 260px;
     justify-content: center;
     flex: auto;
-    padding: 16px 32px;
+    padding: 1rem;
     border: 1px solid;
     transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-weight: 700;
   }
 
   .btn-add-to-cart:hover:not(.bg-green) {
