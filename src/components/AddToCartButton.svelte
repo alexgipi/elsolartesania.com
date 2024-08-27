@@ -92,7 +92,7 @@
 <style>
 
   .circle-add-to-cart-button {
-    padding: 1.5rem;
+    padding: 1.75rem;
     background: #fff;
     color: #000;
     outline: 1px solid;
@@ -100,6 +100,7 @@
     width: 100%;
     justify-content: center;
     display: flex;
+    height: 84px;
   }
 
   .btn-add-to-cart {
