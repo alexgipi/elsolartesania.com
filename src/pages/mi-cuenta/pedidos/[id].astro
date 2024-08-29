@@ -5,6 +5,7 @@ import SecondaryNav from "../../../components/SecondaryNav.astro";
 import { formatCurrency, formatDate, slugify } from "../../../utils";
 import { ORDER_STATUS_VALUES } from "../../../consts"
 import { API_URL } from "../../../services/ecommerce";
+import { ES_ISO_PROVINCES } from "../../../provinces-consts";
 
 const { id } = Astro.params;
 const identityCookieValue = Astro.cookies.get("identity")?.value;
@@ -60,7 +61,7 @@ async function getOrder(orderNumber: string | undefined) {
 
     <SecondaryNav />
 
-    <div class="container align-it-flex-start">
+    <div class="my-account container align-it-flex-start">
 
       <div class="my-account-content padding-0">
         <table
@@ -133,6 +134,23 @@ async function getOrder(orderNumber: string | undefined) {
             </tr>
           </tfoot>
         </table>
+
+        <div class="order-shipping-address-panel">
+          <h2 class="order-shipping-adress-panel-title">Dirección de envío</h2>
+
+          <address>
+            {order?.customerName}<br/>
+            {order?.shippingAddress?.line1}<br/>
+            {order?.shippingAddress?.postal_code} {order?.shippingAddress?.city}<br/>
+            {ES_ISO_PROVINCES[order?.shippingAddress?.state]}, {order?.shippingAddress?.country} 
+            <!-- <p class="woocommerce-customer-details--phone">
+              603483709
+            </p> -->
+            <p class="order-shipping-adress-panel--email">
+              {order?.email}
+            </p>
+          </address>
+        </div>
       </div>
     </div>
   </main>
@@ -150,7 +168,17 @@ async function getOrder(orderNumber: string | undefined) {
     color: #000;
     font-size: 0.9em;
     width: 100%;
-    margin-bottom: 4rem;
+    margin-block: 4rem;
+
+    @media(max-width: 550px) {
+      margin-block: 0rem;
+    }
+  }
+
+  @media(max-width: 550px) {
+    .my-account.container {
+      padding: 0;
+    }
   }
 
   table {
@@ -199,5 +227,18 @@ async function getOrder(orderNumber: string | undefined) {
 
     tbody tr {
         border-top: 1px solid;
+    }
+
+    .order-shipping-address-panel {
+      padding: 2.5rem 1.5rem;
+      outline: 1px solid;
+      margin-top: 1px;
+    }
+
+    .order-shipping-adress-panel-title {
+      font-size: 1,2rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
     }
 </style>
