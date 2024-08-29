@@ -64,11 +64,14 @@ try {
       flex-direction: column;
   }
   .my-account-content {
-    border-radius: 4px;
     color: #000;
     font-size: 0.9em;
     width: 100%;
-    margin-bottom: 4rem;
+    margin-block: 4rem;
+
+    @media(max-width: 550px) {
+        margin-block: 3rem;
+    }
   }
 
   .my-account-content p {
@@ -77,7 +80,15 @@ try {
   }
 
   .my-account-panel {
-    padding: 3rem;
+    padding: 2.5rem;
     outline: 1px solid;
+
+    @media(max-width: 550px) {
+      
+      padding: 0;
+      font-size: 0.8rem;
+      outline: none;
+      
+    }
   }
 </style>

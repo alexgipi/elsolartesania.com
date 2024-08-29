@@ -132,7 +132,17 @@ async function userOrders(){
       color: #000;
       font-size: 0.9em;
       width: 100%;
-      margin-bottom: 4rem;
+      margin-block: 4rem;
+
+      @media(max-width: 550px) {
+          margin-block: 0;
+      }
+    }
+
+    @media(max-width: 550px) {
+      .my-account.container {
+        padding: 0;
+      }
     }
 
     table {

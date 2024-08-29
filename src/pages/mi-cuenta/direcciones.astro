@@ -55,15 +55,19 @@ console.log(Astro.cookies.get("Hola"));
     }
   
     .my-account-content {
-      border-radius: 4px;
+      color: #000;
       font-size: 0.9em;
       width: 100%;
-      margin-bottom: 4rem;
+      margin-block: 4rem;
+
+      @media(max-width: 550px) {
+          margin-block: 3rem;
+      }
     }
 
     .addresses {
       display: grid;
-      gap: 1.5rem;
+      gap: 2.5rem;
       grid-template-columns: 1fr 1fr;
 
       @media(max-width: 900px){
@@ -72,16 +76,20 @@ console.log(Astro.cookies.get("Hola"));
     }
 
     .address-element {
-      padding: 2rem;
+      padding: 2.5rem;
       background-color: #fff;
       min-width: 50%;
-      outline: 1px solid;     
+      outline: 1px solid;
+      
+      @media(max-width: 550px) {
+        padding: 0;
+        outline: none;
+      }
     }
 
     .address-element header {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
+      flex-direction: column;
     }
 
     address {
@@ -98,7 +106,7 @@ console.log(Astro.cookies.get("Hola"));
     }
 
     a.edit {
-      padding: 6px 14px;
+      padding: 10px 0;
       border-radius: 5px;
       color: #000;
       font-weight: 600;

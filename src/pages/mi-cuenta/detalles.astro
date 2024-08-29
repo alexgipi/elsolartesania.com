@@ -39,7 +39,7 @@ try {
             <div class="space-y-12">
               <div class="border-b border-black pb-12">
                 <h2 class="text-base uppercase font-semibold leading-7 text-gray-900">Credenciales</h2>
-                <p class="mt-1 text-sm leading-6 text-gray-600">
+                <p class="mt-1 text-sm leading-5 text-gray-600">
                   Esta información se utilizará para iniciar sesión en tu cuenta. Por favor, asegúrate de mantenerla segura y no compartirla con nadie.
                 </p>
 
@@ -170,7 +170,9 @@ try {
 
               <div class="border-b border-black pb-12">
                 <h2 class="text-base uppercase font-semibold leading-7 text-gray-900">Información personal</h2>
-                <p class="mt-1 text-sm leading-6 text-gray-600">Use a permanent address where you can receive mail.</p>
+                <p class="mt-1 text-sm leading-5 text-gray-600 text-pretty">
+                  Añade una dirección principal en la que recibirás tus pedidos
+                </p>
 
                 <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div class="sm:col-span-3">
@@ -243,17 +245,29 @@ try {
     }
   
     .my-account-content {
-      padding: 0;
-      border-radius: 4px;
-      color: #6e6e6e;
+      color: #000;
       font-size: 0.9em;
       width: 100%;
-      margin-bottom: 4rem;
+      margin-block: 4rem;
+
+      @media(max-width: 550px) {
+          margin-block: 3rem;
+      }
     }
 
     .my-account-panel {
-      padding: 3rem;
+      padding: 2.5rem;
       outline: 1px solid;
+
+      @media(max-width: 550px) {
+        padding: 0;
+        outline: none;
+      }
+    }
+
+    .my-account-panel h2 {
+      font-size: 1.25em;
+      font-weight: 600;
     }
 
     select {
