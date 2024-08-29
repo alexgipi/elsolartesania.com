@@ -8,12 +8,34 @@ import ToggleCart from "../ToggleCart.svelte";
             Mi cuenta
         </a>
         <ToggleCart client:load></ToggleCart>
-        <a href="/blog" class="bottom-navbar-item">
-            <svg xmlns="http://www.w3.org/2000/svg" height="20px" width="20px" viewBox="0 -960 960 960" fill="currentColor"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"></path></svg>
+        <button id="mobile-nav-toggle-button" class="bottom-navbar-item">
+            <svg class="bottom-navbar-menu-icon" xmlns="http://www.w3.org/2000/svg" height="20px" width="20px" viewBox="0 -960 960 960" fill="currentColor"><path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z"></path></svg>
+            <svg class="bottom-navbar-close-icon" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px" fill="currentColor"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"></path></svg>
             Menú
-        </a>
+        </button>
     </div>
 </nav>
+
+<nav class="mobile-nav-panel">
+
+    <div class="mobile-nav-panel-backdrop"></div>
+
+    <div class="mobile-nav-panel-content">
+        <h4 class="mobile-nav-panel-title">Menú</h4>
+
+        <div class="mobile-nav-panel-links">
+            <a href="/perfumes-solidos">Perfumes sólidos</a>
+            <a href="/perfumes-roll-on">Perfumes roll-on</a>
+            <a href="/perfumes-roll-on-15ml">Perfumes roll-on 15ml</a>
+            <a href="/aromaterapia-natural">Aromaterapia natural</a>
+            <a href="/aceites-esenciales">Aceites esenciales</a>
+            <a href="/cacaos-labiales">Cacaos labiales</a>
+            <a href="/manopla-depilatoria">Manopla depilatoria</a>
+        </div>
+    </div>
+
+</nav>
+
 
 <style>
     .bottom-navbar {
@@ -61,6 +83,90 @@ import ToggleCart from "../ToggleCart.svelte";
         height: var(--height);
         outline: var(--outline);
     }
+
+
+    .mobile-nav-panel {
+        position: fixed;
+        bottom: 70px;
+        z-index: 9;
+        width: 100%;
+        left: 0;
+        height: calc(100vh - 70px);
+        display: flex;
+        align-items: flex-end;
+        visibility: hidden;
+        transition: visibility 0.3s ease-in-out;
+
+        .mobile-nav-panel-backdrop {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                z-index: 0;
+                background: transparent;
+                left: 0;
+                top: 0;
+                transition: background 0.3s ease;
+        }
+
+        &.open {
+            visibility: visible;
+
+            .mobile-nav-panel-backdrop {
+                background: rgba(0, 0, 0, 0.5);
+            }
+
+            .mobile-nav-panel-content {
+                transform: translate(0, 0);                
+            }
+        }
+
+        .mobile-nav-panel-content {
+            flex: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            padding: 2rem;
+            background: #fff;
+            position: relative;
+            border-top: 1px solid;
+            transform: translate(0, 100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-nav-panel-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .mobile-nav-panel-links {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+    }
+
+    #mobile-nav-toggle-button {
+        .bottom-navbar-close-icon {
+            display: none;
+        }
+
+        &.opened {
+            .bottom-navbar-menu-icon {
+                display: none;
+            }
+            .bottom-navbar-close-icon {
+                display: block;
+            }
+        }
+    }
+
+
+    
+
 </style>
 
 <style is:global>
@@ -79,4 +185,36 @@ import ToggleCart from "../ToggleCart.svelte";
             }
         }
     }
+    
 </style>
+
+
+<script>
+    const $ = (s:any) => document.querySelector(s);
+    const $$ = (s:any) => document.querySelectorAll(s);
+
+    let open = false;
+
+    function togglePanel() {
+        open = !open;
+
+        $mobileNavPanel.classList.toggle("open");
+        $toggleButton.classList.toggle("opened");
+    }
+    
+    const $toggleButton = $("#mobile-nav-toggle-button");
+    const $mobileNavPanel = $(".mobile-nav-panel");
+    const $backdrop = $(".mobile-nav-panel-backdrop");
+    const $links = $$(".mobile-nav-panel-links a");
+
+    $toggleButton.addEventListener("click", togglePanel);
+    $backdrop.addEventListener("click", togglePanel);
+
+    $links.forEach((link) => {
+        link.addEventListener("click", () => {
+            setTimeout(() => {
+                togglePanel();
+            },200);
+        });
+    });
+</script>
