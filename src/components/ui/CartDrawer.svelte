@@ -103,19 +103,23 @@ on:click={toggleCart}>
                     type="radio"
                     >
 
-                    <span>
-                        {shippingType.name}
-                        {#if !shippingType.freeShipping}
-                        - {formatCurrency(shippingType.price)}
-                        {/if}
-
-                        {#if !shippingType.freeShipping}
-                        <small>(48h - 72h)</small>
-                        {/if}
-
-                        {#if $minForFreeShipping - $subtotal > 0 && shippingType.freeShipping}
-                            <small>(Te faltan {formatCurrency($minForFreeShipping - $subtotal)})</small>
-                        {/if}
+                    <span class="shipping-option-details flex flex-col">
+                        <span class="shipping-option-title">
+                            <span class="shipping-option-name">{shippingType.name}</span>
+                            
+                            <span class="shipping-option-price">
+                                {#if !shippingType.freeShipping}
+                                - {formatCurrency(shippingType.price)}
+                                {/if}
+                            </span>
+    
+                            {#if $minForFreeShipping - $subtotal > 0 && shippingType.freeShipping}
+                                <small>(Te faltan {formatCurrency($minForFreeShipping - $subtotal)})</small>
+                            {/if}
+                        </span>
+                        <small class="shipping-option-time">
+                            {shippingType.shippingTime}
+                        </small>
                     </span>
                 </label>
             {/each}
@@ -289,7 +293,7 @@ on:click={toggleCart}>
 
     .cart-drawer__item {
         display: flex;
-        gap: 1.5rem;
+        gap: 1.25rem;
         padding: 1.5rem 0;
         border-bottom: var(--drawer-border);
 
@@ -421,7 +425,8 @@ on:click={toggleCart}>
         margin-bottom: 10px;
 
         &.disabled {
-            opacity: 0.4;
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         &:last-child {
