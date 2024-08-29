@@ -30,13 +30,23 @@
 class="jumbotron-hero bg-center bg-no-repeat"
 > 
     <div class="container py-4 flex flex-col gap-16 md:flex-row">
-        <div class="flex flex-col flex-1 gap-6">
+        <div class="flex flex-col flex-1 gap-5">
             <h1 class="jumbotron-title text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-5xl">
                 {product.name}
             </h1>
 
             <span class="product-price"> {formatCurrency(product.price)}</span>
             
+            <!-- <div style="display: flex;flex-direction: column;gap: 3px;">
+                <small style="color: #F44336;font-weight: 500;">
+                    Descuento del 20%
+                </small>
+
+                <small>En oferta hasta el 25/09/2024</small>
+                <small>Quedan 12 existencias</small>
+                <small class="s-fixAp37SvpcD" data-svelte-h="svelte-oheazp">Descuentos por volumen: +25 -&gt; 2.5% | +50 -&gt; 5% | +100 -&gt; 10%</small>
+            </div> -->
+
             {#if product.short_description}
                 <div class="jumbotron-content">
                     {@html product?.short_description}
@@ -57,6 +67,7 @@ class="jumbotron-hero bg-center bg-no-repeat"
         
         <div class="jumbotron-item-featured-block flex-1">
             <Gallery product={product} />
+            
         </div>
     </div>
 </section>
