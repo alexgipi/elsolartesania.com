@@ -45,8 +45,6 @@ if (Astro.request.method === "POST") {
     } else {
       const resetPasswordResponse = await resetPassword(password);
 
-      console.log(resetPasswordResponse)
-
       if(resetPasswordResponse.ok){   
         const { user, token } = resetPasswordResponse;     
         alertMessage.status = 'success';
@@ -66,7 +64,7 @@ if (Astro.request.method === "POST") {
         errors.invalidEmail = true;
         alertMessage.status = 'error';
 
-        if(error === 'Token missing or invalid') {
+        if(error === 'Token missing or invalid' || error === 'token expired') {
             alertMessage.message = 'Tu enlace de cambio de contraseña no es válido o ya se ha utilizado.';
         }
         
@@ -138,14 +136,14 @@ async function resetPassword(password:string){
 
   } catch(error){
     console.log(error)
-      alertMessage.status = 'error';
-      alertMessage.message = 'Ha habído un problema al restablecer la contraseña.';
+    alertMessage.status = 'error';
+    alertMessage.message = 'Ha habído un problema al restablecer la contraseña.';
   }
     
 }
 ---
 
-<Layout title="Finalizar compra">
+<Layout title="Cambia tu contraseña">
   <main>
     <Jumbotron
       class="jumbotron--small bg-position-center"
