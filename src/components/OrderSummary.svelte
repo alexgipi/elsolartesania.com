@@ -15,6 +15,7 @@
   let email: string;
   let address: object;
   let name: string;
+  let customerPhone: string;
   // let shippingType: string = "Correos Express (48h - 72h)";
 
   // Fetches a payment intent and captures the client secret
@@ -212,6 +213,7 @@
         items: $cartItems,
         email,
         customerName: name,
+        customerPhone,
         address,
         shippingCost: shippingTypeSelected.price,
         shippingType: shippingTypeSelected.name,
@@ -304,6 +306,23 @@
 
       <div class="stripe-element" id="address-element" />
 
+      <div class="stripe-custom-field text">
+        <label for="tel">Teléfono (Opcional)</label>       
+        <input 
+        bind:value={customerPhone}
+        type="tel" 
+        id="tel" 
+        name="tel" 
+        placeholder="Ej: 123 456 789" 
+        pattern="[0-9]{3}[0-9]{3}[0-9]{3}"
+        required
+        aria-required="true"
+        lang="es"
+        autocomplete="shipping tel"
+        >
+      </div>
+
+
       <!-- <h5 class="title mt-5 mb-4">Detalles de pago</h5> -->
 
       <div class="stripe-element" id="payment-element" />
@@ -370,4 +389,48 @@
   .stripe-element:nth-child(2){
     margin-top: 0;
   }
+
+  .stripe-custom-field {
+    margin-top: 16px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  }
+
+  .stripe-custom-field label {
+    font-weight: 500;
+    color: #30313d;
+    margin-bottom: 12px;
+    display: block;
+    font-size: 0.93rem;
+  }
+
+  .stripe-custom-field.text input {
+    border: 1px solid #e6e6e6;
+    font-weight: 500;
+    background: #fff;
+    width: 100%;
+    padding: 9.2px 12px;
+    min-height: 44.39px;
+    transition: background 0.15s ease, border 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
+  }
+
+  .stripe-custom-field.text input:focus {
+    border-color: rgb(0 0 0 / 50%);
+    box-shadow: rgba(0, 0, 0, 0.03) 0px 1px 1px 0px, rgba(0, 0, 0, 0.02) 0px 3px 6px 0px, rgba(0, 0, 0, 0.25) 0px 0px 0px 3px, rgba(0, 0, 0, 0.08) 0px 1px 1px 0px, 0 0 0 100px rgb(255, 255, 255) inset !important;
+  }
+
+  .stripe-custom-field.text input::placeholder {
+    color: #77787e;
+    font-weight: 500;
+  }
+
+  .stripe-custom-field.text input:-webkit-autofill {
+    -webkit-text-fill-color: rgb(48, 49, 61);
+    box-shadow: 0 0 0 100px rgb(255, 255, 255) inset !important;
+    transition: none !important;
+  }
+
+  .stripe-custom-field.text input:-webkit-autofill:focus {
+    -webkit-text-fill-color: rgb(48, 49, 61);
+    box-shadow: rgba(0, 0, 0, 0.03) 0px 1px 1px 0px, rgba(0, 0, 0, 0.02) 0px 3px 6px 0px, rgba(0, 0, 0, 0.25) 0px 0px 0px 3px, rgba(0, 0, 0, 0.08) 0px 1px 1px 0px, 0 0 0 100px rgb(255, 255, 255) inset !important;
+}
 </style>
