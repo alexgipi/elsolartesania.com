@@ -8,7 +8,7 @@
 </script>
 
 {#if messageClosed === false }
-    <div class="relative isolate flex items-center gap-x-6 overflow-hidden bg-[#3d1a6c] px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
+    <div class="relative isolate flex items-center gap-x-6 overflow-hidden bg-[#000] px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
         <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
         <p class="text-sm leading-6 text-white">
             🎪 Temporalmente sin envíos hasta el 9 de Octubre. Si no puedes esperar nos puedes encontrar en la Feria de Vitoria. Agradecemos tu comprensión. 🌞
