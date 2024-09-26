@@ -4,6 +4,7 @@ import Dropdown from "./ui/Dropdown.astro";
 import ToggleCart from "./ToggleCart.svelte";
 import AdminToolbar from "./AdminToolbar.astro";
 import { API_URL, UPLOADS_URL } from "../services/ecommerce";
+import StoreMessage from "./StoreMessage.svelte";
 const pathname = new URL(Astro.request.url).pathname;
 const currentPath = pathname.slice(1); // remove the first "/"
 
@@ -200,7 +201,7 @@ async function getMainNav() {
   </div>
 </header>
 
-<!-- <StoreMessage client:load></StoreMessage> -->
+<StoreMessage client:load></StoreMessage>
 
 <!-- <CheckoutModal client:load></CheckoutModal> -->
 
