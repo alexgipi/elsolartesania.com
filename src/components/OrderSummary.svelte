@@ -5,7 +5,9 @@
   import { loadStripe } from "@stripe/stripe-js";
   import { API_URL } from "../services/ecommerce";
   import SvelteQuantity from "./ui/SvelteQuantity.svelte";
-  import { onMount } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
+
+  const dispatch = createEventDispatcher();
 
   export let identity: any = null;
 
@@ -147,8 +149,11 @@
   });
 
   const handleError = (error: any) => {
-    const messageContainer: any = document.querySelector("#error-message");
-    messageContainer.textContent = error.message;
+    // const messageContainer: any = document.querySelector("#error-message");
+    // messageContainer.textContent = error.message;
+    // console.log({error});
+
+    dispatch('paymentError', {error});
   };
 
   let shippingTypeSelected: any;
@@ -327,9 +332,8 @@
 
       <div class="stripe-element" id="payment-element" />
 
-      <div id="error-message" />
+      <div id="error-message" class="error-message" />
 
-      <hr class="dark horizontal" />
 
       <!-- <button class="btn btn-dark float-end mt-2 mb-0">
         <svg

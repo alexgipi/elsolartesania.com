@@ -4,6 +4,12 @@
     import OrderSummary from "../OrderSummary.svelte";
     import SvelteQuantity from "./SvelteQuantity.svelte";
 
+    let defaultShippingType = shippingTypes.find(shippingType => shippingType.default);
+    let selectedShippingType;
+    let handleSubmitChild:any;
+    let showPaymentForm = false;
+    let paying = false;
+
     function toggleCart() {
         isCartOpen.set(!$isCartOpen);
         let layoutElement = document.querySelector(".layout--aside-cart");
@@ -24,23 +30,6 @@
         removeCartItem(itemKey)
     }
 
-    
-
-    let defaultShippingType = shippingTypes.find(shippingType => shippingType.default);
-    let selectedShippingType;
-
-    let handleSubmitChild:any;
-
-    let paying = false;
-    function submit(event: any) {
-        if(paying) return;
-
-        handleSubmitChild(event)
-        paying = true;
-    }
-
-    let showPaymentForm = false;
-
     function backHandler() {
         showPaymentForm = false;
     }
@@ -56,6 +45,21 @@
     function continueShoppingHandler() {
         clickContinueShoppingCount.set($clickContinueShoppingCount + 1);
         toggleCart();
+    }
+
+    function submit(event: any) {
+        if(paying) return;
+
+        handleSubmitChild(event)
+        paying = true;
+    }
+
+    let errorMessage:any = null;
+    function handlePaymentError(event:any) {
+        errorMessage = event.detail.error.message;
+        setTimeout(() => {
+            paying = false;
+        }, 200);
     }
 </script>
 
@@ -132,10 +136,10 @@ on:click={toggleCart}>
         </div>
 
         <div class:hidden={!showPaymentForm} class="cart-drawer-payment-form">
-            <OrderSummary bind:handleSubmit={handleSubmitChild}></OrderSummary>
+            <OrderSummary bind:handleSubmit={handleSubmitChild} on:paymentError={handlePaymentError}></OrderSummary>
         </div>
 
-        <div class="cart-drawer__items">
+        <div class:hidden={showPaymentForm} class="cart-drawer__items">
 
             {#each Object.entries($cartItems) as [key, cartItem]}
                 <div class="cart-drawer__item">
@@ -167,7 +171,10 @@ on:click={toggleCart}>
         </div>
     </div>
 
-        
+    {#if errorMessage }
+        <div class="error-message">{errorMessage}</div>
+    {/if}
+
     <footer class="cart-drawer__footer">
         {#if showPaymentForm}
             <button 
@@ -239,7 +246,7 @@ on:click={toggleCart}>
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding: 1.5rem;
+        padding: 1.25rem;
         height: 90px;
         border-bottom: 1px solid;
     }
@@ -291,7 +298,6 @@ on:click={toggleCart}>
     }
 
     .cart-drawer__body {
-        padding: 1.5rem 1.5rem 0;
         flex: auto;
         overflow: auto;
     }
@@ -353,7 +359,7 @@ on:click={toggleCart}>
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 1.5rem;
+        padding: 1.25rem;
         gap: 1rem;
 
         & .drawer-btn {
@@ -370,6 +376,7 @@ on:click={toggleCart}>
 
             &.paying {
                 background: #333;
+                cursor: default;
             }
         }
 
@@ -392,9 +399,12 @@ on:click={toggleCart}>
     }
 
     .cart-shipping-details {
-        padding: 1.5rem;
-        border: 1px solid;
-        margin-bottom: 1.5rem;
+        padding: 1.25rem;
+        border-bottom: 1px solid #0b0b0b;
+    }
+
+    .cart-drawer-payment-form, .cart-drawer__items {
+        padding: 1.25rem;
     }
 
     .option-selector {
@@ -467,5 +477,13 @@ on:click={toggleCart}>
                 --tw-ring-color: #000;
             }
         }
+    }
+
+    .error-message {
+        padding: 6px 1.25rem;
+        font-size: 14px;
+        text-wrap: pretty;
+        background: #ff00001f;
+        color: red;
     }
 </style>
