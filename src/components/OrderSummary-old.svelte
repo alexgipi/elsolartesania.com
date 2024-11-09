@@ -14,8 +14,8 @@
   let email: string;
   let address: object;
   let name: string;
-  let shippingType: string = "Correos Express (24h - 48h)";
-  let shippingCost = 8.5;
+  let shippingType: string = "Correos (48h - 72h)";
+  let shippingCost = 5;
 
 
   initialize();
@@ -373,7 +373,7 @@
                 /></span
               >
             </p>
-            <p class="fw-bold opacity-8 text-white">{formatCurrency(8.5)}</p>
+            <p class="fw-bold opacity-8 text-white">{formatCurrency(5)}</p>
           </div>
 
           <form class="mt-5 grid gap-6">

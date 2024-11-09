@@ -16,16 +16,16 @@ export const cartItems = map<Record<string, CartItem>>({});
 export const totalItems = atom(0);
 export const subtotal = atom(0);
 export const minForFreeShipping = atom(45);
-export const shippingCost = atom(8.5);
+export const shippingCost = atom(5);
 export const clickContinueShoppingCount = atom(0);
 
 export let shippingTypes = [
   {
-      value: 'correos-express',
-      name: 'Correos Express',
-      label: 'Correos Express (48h - 72h)',
+      value: 'correos',
+      name: 'Correos',
+      label: 'Correos (48h - 72h)',
       shippingTime: 'Entrega entre 48h y 72h ',
-      price: 8.5,
+      price: 5,
       freeShipping: false,
       default: true,
   },
