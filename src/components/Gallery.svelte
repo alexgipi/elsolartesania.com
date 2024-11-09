@@ -10,7 +10,8 @@
     <input id={'gallery-' + (index + 1)} type="radio" name="position" bind:group={position} value={index} checked={index === 0} />
   {/each}
 
-  <div class="gallery-content dotted-bg">
+  <!-- dotted-bg (fondo de  cuadicula) -->
+  <div class="gallery-content"> 
     <div class="flex" transition:name={product?.slug} style="overflow: hidden; border-radius: 20px;">
       <div class="gallery-items flex" style="--position: {position}">
         {#each product?.images || [] as image, index}
@@ -103,12 +104,12 @@
 
   .gallery-content {
     overflow: hidden;
-    border-radius: 3rem;
-    border: 1px solid #ddd;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #eee;
+    padding: 1.5rem;
   }
 
   .gallery-content.dotted-bg {
@@ -139,6 +140,7 @@
     object-fit: contain;
     width: 100%;
     aspect-ratio: 1 / 1;
+    filter: drop-shadow(-4px 19px 10px rgba(0, 0, 0, 0.33));
   }
 
   .gallery-nav {
