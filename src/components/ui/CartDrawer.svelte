@@ -51,6 +51,7 @@
 
     function continueShoppingHandler() {
         clickContinueShoppingCount.set($clickContinueShoppingCount + 1);
+        toggleCart();
     }
 </script>
 
@@ -187,7 +188,7 @@ on:click={toggleCart}>
         type="button" 
         class="drawer-btn cart_drawer__continue"
         >
-            Continuar comprando - {$clickContinueShoppingCount}
+            Continuar comprando
         </button>
     </footer>
 </div>
