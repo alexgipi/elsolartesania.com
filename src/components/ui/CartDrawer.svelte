@@ -31,8 +31,12 @@
 
     let handleSubmitChild:any;
 
+    let paying = false;
     function submit(event: any) {
+        if(paying) return;
+
         handleSubmitChild(event)
+        paying = true;
     }
 
     let showPaymentForm = false;
@@ -169,9 +173,15 @@ on:click={toggleCart}>
             <button 
             type="submit" 
             class="drawer-btn cart_drawer__checkout" 
+            class:paying={paying}
             on:click={submit}
             >
-                Realizar pago - {formatCurrency( $minForFreeShipping - $subtotal <= 0 ? $subtotal : $subtotal + $shippingCost)}
+                {#if paying}
+                    Procesando pago
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#FFFFFFFF" style="width:24px;height:22px" viewBox="0 0 24 24"><circle cx="4" cy="12" r="3"><animate id="b" attributeName="r" begin="0;a.end-0.25s" dur="0.75s" values="3;.2;3"/></circle><circle cx="12" cy="12" r="3"><animate attributeName="r" begin="b.end-0.6s" dur="0.75s" values="3;.2;3"/></circle><circle cx="20" cy="12" r="3"><animate id="a" attributeName="r" begin="b.end-0.45s" dur="0.75s" values="3;.2;3"/></circle></svg>
+                {:else}
+                    Realizar pago - {formatCurrency( $minForFreeShipping - $subtotal <= 0 ? $subtotal : $subtotal + $shippingCost)}
+                {/if}
             </button>
         {:else}
             <button 
@@ -180,7 +190,7 @@ on:click={toggleCart}>
             class="drawer-btn cart_drawer__checkout" 
             on:click={finishPurchaseHandler}
             >
-                Finalizar compra
+                Continuar con el pago
             </button>
         {/if}
         <button 
@@ -188,7 +198,7 @@ on:click={toggleCart}>
         type="button" 
         class="drawer-btn cart_drawer__continue"
         >
-            Continuar comprando
+            Seguir comprando
         </button>
     </footer>
 </div>
@@ -353,6 +363,14 @@ on:click={toggleCart}>
             color: #000;
             border: var(--drawer-border);
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap:10px;
+
+            &.paying {
+                background: #333;
+            }
         }
 
         & .cart_drawer__checkout {
