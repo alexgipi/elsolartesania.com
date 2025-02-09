@@ -62,35 +62,35 @@ async function userOrders(){
     <div class="my-account container align-it-flex-start">
       <div class="my-account-content table-container padding-0">
 
-        <table class="woocommerce-orders-table woocommerce-MyAccount-orders shop_table shop_table_responsive my_account_orders account-orders-table">
+        <table class="my_account_orders account-orders-table">
           <thead>
             <tr>
-                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-number"><span class="nobr">Pedido</span></th>
+                <th><span class="nobr">Pedido</span></th>
                 
-                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-status"><span class="nobr">Estado</span></th>
-                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-total"><span class="nobr">Total</span></th>
+                <th><span class="nobr">Estado</span></th>
+                <th><span class="nobr">Total</span></th>
                 
                 
-                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-date"><span class="nobr">Fecha</span></th>
-                <th class="woocommerce-orders-table__header woocommerce-orders-table__header-order-actions"><span class="nobr">Acciones</span></th>
+                <th><span class="nobr">Fecha</span></th>
+                <th><span class="nobr">Acciones</span></th>
             </tr>
           </thead>
       
           <tbody>
             { 
               orders.map((order:any) => (
-                <tr class="woocommerce-orders-table__row woocommerce-orders-table__row--status-completed order">
-                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-number" data-title="Pedido">
+                <tr class="order">
+                  <td>
                     <a href={"/mi-cuenta/pedidos/" + order.orderNumber}>
                       #{order.orderNumber}
                     </a>
                   </td>
-
-                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-status" data-title="Estado">
+                  
+                  <td>
                     { ORDER_STATUS_VALUES[order.status]?.['es'] }
                   </td>
                   
-                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-total" data-title="Total">
+                  <td>
                     
                     <a href={"/mi-cuenta/pedidos/" + order.orderNumber}>
                       <span class="woocommerce-Price-amount amount">
@@ -102,13 +102,12 @@ async function userOrders(){
                     
                   </td>
 
-                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-date" data-title="Fecha">
+                  <td>
                     <time datetime={order.createdAt}>{formatDate(order.createdAt)}</time>
-                  </td>                 
+                  </td>
 
-
-                  <td class="woocommerce-orders-table__cell woocommerce-orders-table__cell-order-actions" data-title="Acciones">
-                    <a href={"/mi-cuenta/pedidos/" + order.orderNumber} class="woocommerce-button button view">Ver</a>
+                  <td>
+                    <a href={"/mi-cuenta/pedidos/" + order.orderNumber} class="button view">Ver</a>
                   </td>
                 </tr>
               ))            
