@@ -33,7 +33,7 @@ try {
     <div class="container">
       <div class="my-account-content">
         <div class="my-account-panel">
-          <p>
+          <p style="margin-bottom: 10px;">
             Hola <strong>{identity?.username}</strong>
             (¿no eres <strong>{identity?.username}</strong>?
             <a href="/logout" data-astro-prefetch="false">
@@ -42,15 +42,10 @@ try {
             )
           </p>
           <p>
-            Desde el escritorio de tu cuenta puedes ver tus <a
-              href="/mi-cuenta/pedidos/"
-              >pedidos recientes</a
-            >, gestionar tus <a
-              href="https://elsolartesania.com/mi-cuenta/edit-address/"
-              >direcciones de envío y facturación</a
-            > y <a href="https://elsolartesania.com/mi-cuenta/edit-account/"
-              >editar tu contraseña y los detalles de tu cuenta</a
-            >.
+            Desde el escritorio de tu cuenta puedes ver tus <a href="/mi-cuenta/pedidos/">pedidos recientes</a> 
+            y configurarar los <a href="/mi-cuenta/detalles/">
+              detalles de envío.
+            </a>
           </p>
         </div>
       </div>
