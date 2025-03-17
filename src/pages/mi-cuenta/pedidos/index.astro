@@ -8,7 +8,7 @@ import { API_URL } from "../../../services/ecommerce";
 
 const identityCookieValue = Astro.cookies.get("identity")?.value;
 
-let identity = null;
+let identity:any = null;
 let token:string | null = null;
 let orders = [];
 
@@ -27,7 +27,7 @@ try {
 
 async function userOrders(){
   try {
-    const res = await fetch(`${API_URL}/orders`,
+    const res = await fetch(`${API_URL}/orders/email/${identity.email}`,
       {
           method: "GET",
           headers: {
@@ -112,6 +112,14 @@ async function userOrders(){
                 </tr>
               ))            
             }
+
+            { !orders.length && (
+              <tr>
+                <td colspan="5">
+                  <p>No tienes ningún pedido.</p>
+                </td>
+              </tr>
+            )}
             
           </tbody>
         </table>
