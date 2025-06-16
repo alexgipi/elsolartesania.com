@@ -4,6 +4,8 @@
     import OrderSummary from "../OrderSummary.svelte";
     import SvelteQuantity from "./SvelteQuantity.svelte";
 
+    export let identity:any;
+    
     let defaultShippingType = shippingTypes.find(shippingType => shippingType.default);
     let selectedShippingType;
     let handleSubmitChild:any;
@@ -136,7 +138,7 @@ on:click={toggleCart}>
         </div>
 
         <div class:hidden={!showPaymentForm} class="cart-drawer-payment-form">
-            <OrderSummary bind:handleSubmit={handleSubmitChild} on:paymentError={handlePaymentError}></OrderSummary>
+            <OrderSummary {identity} bind:handleSubmit={handleSubmitChild} on:paymentError={handlePaymentError}></OrderSummary>
         </div>
 
         <div class:hidden={showPaymentForm} class="cart-drawer__items">
