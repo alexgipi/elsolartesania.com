@@ -144,23 +144,25 @@
                     >
                         <!-- svelte-ignore a11y-no-noninteractive-element-to-interactive-role -->
                         {#each attribute.options as option, optionIndex}
-                            <li
-                                class:active={option.value === selectedAttributesOptions?.[attribute.slug]?.option.value}
-                                on:click={() => handleImageAttributeChange(option, attribute)}
-                                aria-checked="false"
-                                tabindex="0"
-                                class="variable-item image-variable-item image-variable-item-cajita-1"
-                                title={option.label}
-                                data-tooltip={option.label}
-                                data-label={option.label}
-                                data-value={option.value}
-                                role="radio"
-                                data-tooltip-out-of-stock=""
-                            >
-                                <div class="variable-item-contents">
-                                    <div class="variable-item-color" style="background-color: {option.attribute_option_color}"></div>
-                                </div>
-                            </li>
+                          {#if !option.disable_attribute}
+                              <li
+                                  class:active={option.value === selectedAttributesOptions?.[attribute.slug]?.option.value}
+                                  on:click={() => handleImageAttributeChange(option, attribute)}
+                                  aria-checked="false"
+                                  tabindex="0"
+                                  class="variable-item image-variable-item image-variable-item-cajita-1"
+                                  title={option.label}
+                                  data-tooltip={option.label}
+                                  data-label={option.label}
+                                  data-value={option.value}
+                                  role="radio"
+                                  data-tooltip-out-of-stock=""
+                              >
+                                  <div class="variable-item-contents">
+                                      <div class="variable-item-color" style="background-color: {option.attribute_option_color}"></div>
+                                  </div>
+                              </li>
+                          {/if}
                         {/each}
                     </ul>
                 {/if}
