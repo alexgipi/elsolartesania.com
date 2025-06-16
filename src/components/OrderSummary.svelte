@@ -231,7 +231,7 @@
 
     console.log(data);
 
-    const { status, order } = data;
+    const { status, order, message } = data;
 
     if(order){
       if (!identity || identity === null) {
@@ -249,6 +249,12 @@
 
     if (status === "succeeded") {
       window.location.href = `/finalizar-compra/pedido-recibido?key=${order.orderNumber}`;
+    } else {
+      alert("Error al procesar el pago. Por favor, inténtalo de nuevo más tarde.");
+      console.error("Payment status: ", status);
+      alert("Error message: " + message);
+      handleError({ message: message || "Error al procesar el pago. Por favor, inténtalo de nuevo más tarde." });
+      return;
     }
 
     handleServerResponse(data);
@@ -257,6 +263,7 @@
   const handleServerResponse = async (response: any) => {
     if (response.error) {
       // Show error from server on payment form
+      handleError(response.error);
     } else if (response.status === "requires_action") {
       // Use Stripe.js to handle the required next action
       const { error, paymentIntent } = await stripe.handleNextAction({
@@ -265,6 +272,7 @@
 
       if (error) {
         // Show error from Stripe.js in payment form
+        handleError(error);
       } else {
         // Actions handled, show success message
       }
