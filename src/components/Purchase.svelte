@@ -159,7 +159,18 @@
                                   data-tooltip-out-of-stock=""
                               >
                                   <div class="variable-item-contents">
+                                    {#if option?.['attribute-option-image']?.file}
+                                      <img
+                                          class="variable-item-image"
+                                          aria-hidden="true"
+                                          alt="Cajita 1"
+                                          src={UPLOADS_URL + 'thumbnail/' + option?.['attribute-option-image']?.file}
+                                          width="200"
+                                          height="200"
+                                      />
+                                    {:else}
                                       <div class="variable-item-color" style="background-color: {option.attribute_option_color}"></div>
+                                    {/if}
                                   </div>
                               </li>
                           {/if}
