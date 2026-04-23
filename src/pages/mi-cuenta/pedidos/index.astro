@@ -27,7 +27,7 @@ try {
 
 async function userOrders(){
   try {
-    const res = await fetch(`${API_URL}/orders/email/${identity.email}`,
+    const res = await fetch(`${API_URL}/orders/email/${identity.email}?sort=-createdAt`,
       {
           method: "GET",
           headers: {
@@ -77,8 +77,7 @@ async function userOrders(){
           </thead>
       
           <tbody>
-            { 
-              orders.map((order:any) => (
+            { orders?.length && orders.map((order:any) => (
                 <tr class="order">
                   <td>
                     <a href={"/mi-cuenta/pedidos/" + order.orderNumber}>
