@@ -109,7 +109,6 @@
         "paypal",
         "apple_pay",
         "google_pay",
-        ,
         "klarna",
       ],
     };
