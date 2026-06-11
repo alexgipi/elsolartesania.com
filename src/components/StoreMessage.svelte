@@ -14,7 +14,7 @@
             🎪 Temporalmente sin envíos hasta el día 4 de Marzo. Si no puedes esperar nos puedes encontrar en la Feria de Vitoria. Agradecemos tu comprensión. 🌞
         </p> -->
         <p class="text-sm leading-6 text-white">
-            🎪 Temporalmente sin envíos hasta el día 01 de Abril. Si realizas una compra ten en cuenta que se procesará a partir de esta fecha. Agradecemos tu comprensión. 🌞
+            🎪 Temporalmente sin envíos hasta el día 23/06/2026. Si realizas una compra ten en cuenta que se procesará a partir de esta fecha. Agradecemos tu comprensión. 🌞
         </p>
         </div>
         <div class="flex flex-1 justify-end">
